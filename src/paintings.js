@@ -46,6 +46,46 @@
       image: "/images/Impression, Sunrise, Monet.jpg",
       explanation: "Impression, Sunrise is the painting that gave the Impressionist movement its name. Monet's loose brushwork and focus on capturing the fleeting effects of light and atmosphere exemplify the core principles of Impressionism.",
     },
+    { title: "The Secret Meeting",
+      movement: "Rococo",
+      image: "/images/The Secret Meeting, Fragonard.jpg",
+      explanation: "The Secret Meeting is a Rococo painting that depicts a clandestine encounter between two lovers. The work is characterized by its delicate brushwork, soft colors, and theme of artistocratic romance."
+    },
+    { title: "The Death of Socrates",
+      movement: "Neo-Classical",
+      image: "/images/The Death of Socrates, David.jpg",
+      explanation: "The Death of Socrates is a Neo-Classical painting that dramatizes the moment just before the philosopher Socrates dies by state-ordered execution by poisoning. The use of classical subject matter, clear lines, and moral themes exemplifies the principles of Neo-Classicism."
+    },
+    { title: "The Raft of the Medusa",
+      movement: "Romantic",
+      image: "/images/The Raft of the Medusa, Gericault.jpg",
+      explanation: "The Raft of the Medusa is a painting about the aftermath of a naval disaster that was infamous at the time. Géricault's dramatic composition and emotional intensity are hallmarks of Romanticism."
+    },
+    { title: "Dance at Le Moulin de la Galette",
+      movement: "Impressionist",
+      image: "/images/Dance at Le Moulin de la Galette, Renoir.jpg",
+      explanation: "Dance at Le Moulin de la Galette is an Impressionist painting that captures a lively outdoor dance scene in Paris. Renoir's use of light, color, and loose brushwork exemplifies the Impressionist focus on capturing the fleeting moments of modern life."
+    },
+    { title: "Summertime",
+      movement: "Impressionist",
+      image: "/images/Summertime, Cassatt.jpg",
+      explanation: "Summertime is an Impressionist painting that depicts a mother and child enjoying a leisurely moment outdoors. Cassatt's use of light and reflection, captured en plein air, are characteristic of the Impressionist movement."
+    },
+    { title: "Boulevard des Capucines",
+      movement: "Impressionist",
+      image: "/images/Boulevard des Capucines, Monet.jpg",
+      explanation: "Boulevard des Capucines is an Impressionist painting that captures a bustling Parisian street scene. Monet's emphasis on atmosphere, color, and form exemplifies the Impressionist aesthetic."
+    },
+    { title: "The Gleaners",
+      movement: "Realist",
+      image: "/images/The Gleaners, Millet.jpg",
+      explanation: "The Gleaners is a Realist painting that depicts three peasant women gleaning a field of stray grains of wheat after the harvest. Millet's focus on the dignity of labor and the harsh realities of rural life exemplifies the principles of Realism."
+    },
+    { title: "Wanderer above the Sea of Fog",
+      movement: "Romantic",
+      image: "/images/Wanderer above the Sea of Fog, Friedrich.jpeg",
+      explanation: "Wanderer above the Sea of Fog exemplifies the Romantic emphasis on nature's sublime power and the individual's relationship with it."
+    },
   ];
 
   export default paintings;
