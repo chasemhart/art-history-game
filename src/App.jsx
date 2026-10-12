@@ -1,15 +1,23 @@
 import { useState } from "react";
 import paintings from "./paintings";
+function getRandomPaintings(allPaintings, count) {
+  const shuffled = [...allPaintings].sort(
+    () => Math.random() - 0.5
+  );
 
+  return shuffled.slice(0, count);
+}
 function App() {
 
-  const [remaining, setRemaining] = useState(paintings);
+  const [remaining, setRemaining] = useState(
+  getRandomPaintings(paintings, 8)
+);
   const [dragged, setDragged] = useState(null);
   const [score, setScore] = useState(0);
 const [message, setMessage] = useState(
   "Sort the paintings into the correct movement."
 );
-
+const [results, setResults] = useState([]);
 const [explanation, setExplanation] =
   useState("");
 
@@ -26,7 +34,15 @@ const [explanation, setExplanation] =
       `❌ ${dragged.title} belongs to ${dragged.movement}`
     );
   }
-
+setResults((prev) => [
+  ...prev,
+  {
+    title: dragged.title,
+    correct: dragged.movement === category,
+    movement: dragged.movement,
+    explanation: dragged.explanation,
+  },
+]);
   setExplanation(dragged.explanation);
 
   setRemaining(
@@ -41,7 +57,7 @@ if (remaining.length === 0) {
       <h1>🎉 Game Complete!</h1>
 
       <h2>
-        Final Score: {score} / {paintings.length}
+        Final Score: {score} / 8
       </h2>
 
       <button
