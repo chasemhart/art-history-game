@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Museum Wall, Modern: Sort by movement</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&amp;family=Work+Sans:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22201C}a:hover{color:#7A5230}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes artIn{from{opacity:0;transform:scale(.985);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+@keyframes glowIn{from{opacity:0}to{opacity:.24}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+@keyframes overlayIn{from{opacity:0}to{opacity:1}}
+@keyframes zoomIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.glow{position:absolute;left:-10%;top:-10%;width:120%;height:120%;object-fit:cover;filter:blur(90px) saturate(1.15);opacity:.24;pointer-events:none;animation:glowIn 1.2s ease both}
+.glass{background:rgba(251,250,247,.62);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:1px solid rgba(255,255,255,.7);box-shadow:0 12px 36px -14px rgba(34,32,28,.28),inset 0 1px 0 rgba(255,255,255,.75)}
+.tab{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:999px;text-decoration:none;color:#5E5A52;transition:background-color .25s,color .25s}
+.tab:hover{background:rgba(34,32,28,.07);color:#22201C}
+.tab.is-active{background:#22201C;color:#FBFAF7}
+.tick{display:block;height:3px;border-radius:2px;transition:width .5s cubic-bezier(.2,.8,.2,1),background-color .5s}
+.art{all:unset;cursor:zoom-in;display:flex;max-width:100%;max-height:100%;border-radius:2px;box-shadow:0 22px 44px -12px rgba(34,32,28,.38),0 3px 8px rgba(34,32,28,.16);transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s cubic-bezier(.2,.8,.2,1);animation:artIn .8s cubic-bezier(.2,.8,.2,1) both}
+.art:hover{transform:translateY(-4px);box-shadow:0 40px 70px -20px rgba(34,32,28,.45),0 6px 14px rgba(34,32,28,.16)}
+.art:focus-visible{outline:2px solid #7A5230;outline-offset:6px}
+.art img{display:block;max-width:100%;max-height:640px;object-fit:contain;border-radius:2px}
+.hint{display:inline-flex;align-items:center;gap:8px;font-family:'Work Sans',sans-serif;font-size:13px;color:#5E5A52;opacity:.85}
+.rise{animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+.d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}
+.choice{position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;min-height:52px;padding:12px 18px;box-sizing:border-box;border-radius:10px;border:1px solid rgba(34,32,28,.14);background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#22201C;font-family:'Source Serif 4',Georgia,serif;font-size:18px;text-align:left;cursor:pointer;box-shadow:0 1px 2px rgba(34,32,28,.06);transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,border-color .25s,color .45s,background-color .25s}
+.choice::before{content:'';position:absolute;inset:0;background:#22201C;transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.65,0,.35,1)}
+.choice>span{position:relative}
+.choice .chev{opacity:0;transform:translateX(-6px);transition:opacity .25s,transform .25s}
+.choice.is-idle:hover{transform:translateY(-2px);border-color:rgba(34,32,28,.32);background:rgba(255,255,255,.8);box-shadow:0 14px 28px -14px rgba(34,32,28,.4)}
+.choice.is-idle:hover .chev{opacity:1;transform:none}
+.choice.is-idle:active{transform:translateY(0) scale(.985);box-shadow:0 2px 6px -2px rgba(34,32,28,.3)}
+.choice:focus-visible{outline:2px solid #7A5230;outline-offset:3px}
+.choice:disabled{cursor:default}
+.choice.is-answer{color:#FBFAF7;border-color:#22201C}
+.choice.is-answer::before{transform:scaleX(1)}
+.choice.is-wrong{color:#7A5230;border:1px dashed #7A5230;background:rgba(255,255,255,.35);animation:shake .45s ease}
+.choice.is-dim{color:#66625A;background:rgba(255,255,255,.25);border-color:rgba(34,32,28,.1);box-shadow:none}
+.tag{font-family:'Work Sans',sans-serif;font-size:12px;letter-spacing:1.2px;text-transform:uppercase}
+.next{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:54px;border:0;border-radius:10px;background:#22201C;color:#FBFAF7;font-family:'Work Sans',sans-serif;font-size:15px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;box-shadow:0 14px 28px -14px rgba(34,32,28,.6);transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,background-color .25s}
+.next:hover{transform:translateY(-2px);background:#36332D;box-shadow:0 20px 34px -14px rgba(34,32,28,.65)}
+.next:active{transform:scale(.985)}
+.next svg{transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.next:hover svg{transform:translateX(4px)}
+.next:focus-visible{outline:2px solid #7A5230;outline-offset:3px}
+.scrim{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:40px;box-sizing:border-box;animation:overlayIn .35s ease both}
+.scrim-bg{all:unset;position:absolute;inset:0;cursor:zoom-out;background:rgba(237,233,225,.55);-webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2)}
+.scrim figure{position:relative;margin:0;display:flex;flex-direction:column;align-items:center;gap:14px;animation:zoomIn .45s cubic-bezier(.2,.8,.2,1) both}
+.scrim img{max-width:min(1100px,90vw);max-height:78vh;object-fit:contain;box-shadow:0 40px 90px -30px rgba(34,32,28,.6)}
+.close{position:absolute;top:20px;right:20px;z-index:2;width:48px;height:48px;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#22201C;transition:transform .25s}
+.close:hover{transform:rotate(90deg)}
+.close:focus-visible{outline:2px solid #7A5230;outline-offset:3px}
+@keyframes draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes corners{from{opacity:0;inset:-28px}to{opacity:1;inset:-16px}}
+@keyframes glint{0%{opacity:0;transform:scale(.3) rotate(45deg)}60%{opacity:1;transform:scale(1.25) rotate(45deg)}100%{opacity:1;transform:scale(1) rotate(45deg)}}
+.stage{position:relative}
+.spot{position:absolute;left:8%;right:8%;top:-30px;height:80%;background:radial-gradient(ellipse at 50% 0%,rgba(255,250,236,.75),rgba(255,250,236,0) 70%);pointer-events:none}
+.art{position:relative}
+.art::before{content:'';position:absolute;inset:-16px;pointer-events:none;background:linear-gradient(#A9843F,#A9843F) left top/22px 1px no-repeat,linear-gradient(#A9843F,#A9843F) left top/1px 22px no-repeat,linear-gradient(#A9843F,#A9843F) right top/22px 1px no-repeat,linear-gradient(#A9843F,#A9843F) right top/1px 22px no-repeat,linear-gradient(#A9843F,#A9843F) left bottom/22px 1px no-repeat,linear-gradient(#A9843F,#A9843F) left bottom/1px 22px no-repeat,linear-gradient(#A9843F,#A9843F) right bottom/22px 1px no-repeat,linear-gradient(#A9843F,#A9843F) right bottom/1px 22px no-repeat;animation:corners 1s .35s cubic-bezier(.2,.8,.2,1) both;transition:inset .5s cubic-bezier(.2,.8,.2,1)}
+.art:hover::before{inset:-22px}
+.rule{display:block;width:44px;height:1px;margin:4px 0 2px;background:#A9843F;transform-origin:left;animation:draw .9s .45s cubic-bezier(.65,0,.35,1) both}
+.lead{display:inline-flex;align-items:center;gap:10px}
+.lead::before{content:'';flex:none;width:6px;height:6px;background:#A9843F;animation:glint .8s .55s cubic-bezier(.2,.8,.2,1) both}
+.drop::first-letter{float:left;font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:60px;line-height:.78;padding:6px 8px 0 0;color:#7A5230}
+.choice::after{content:'';position:absolute;left:18px;right:18px;bottom:0;height:1px;background:#A9843F;transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.65,0,.35,1)}
+.choice.is-idle:hover::after{transform:scaleX(1)}
+.next{position:relative}
+.next svg{color:#D4B06A}
+.next::after{content:'';position:absolute;left:24px;right:24px;bottom:11px;height:1px;background:#D4B06A;transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.65,0,.35,1)}
+.next:hover::after{transform:scaleX(1)}
+.art:focus-visible,.choice:focus-visible,.next:focus-visible,.close:focus-visible,.tab:focus-visible{outline:2px solid #2F4A6D;outline-offset:4px}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+<div style="position: relative; overflow: clip; box-sizing: border-box; min-height: 900px; background: #EDE9E1; color: #22201C; font-family: 'Source Serif 4', Georgia, serif">
+<sc-for list="{{slides}}" as="s" hint-placeholder-count="1">
+<sc-if value="{{s.glowOn}}" hint-placeholder-val="{{false}}">
+<img class="glow" src="{{s.img}}" alt="" aria-hidden="true">
+</sc-if>
+</sc-for>
+<div style="position: relative; z-index: 1; box-sizing: border-box; padding: 22px 48px 72px">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px">
+<header class="glass" style="position: sticky; top: 16px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 12px 10px 22px; border-radius: 16px">
+<div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 600; letter-spacing: 0.2px">Art History Study</div>
+<nav aria-label="Study modes" style="display: flex; gap: 4px; font-family: 'Work Sans', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase">
+<a href="#" class="tab is-active" aria-current="page">Sort by movement</a>
+<a href="#" class="tab">Identify</a>
+</nav>
+<div style="display: flex; align-items: center; gap: 14px; padding-right: 10px; font-family: 'Work Sans', sans-serif; font-size: 14px; color: #5E5A52">
+<span>Painting {{n}} of 8</span>
+<div aria-hidden="true" style="display: flex; align-items: center; gap: 4px">
+<sc-for list="{{ticks}}" as="t" hint-placeholder-count="8"><span class="tick" style="{{t.style}}"></span></sc-for>
+</div>
+</div>
+</header>
+<sc-for list="{{slides}}" as="s" hint-placeholder-count="1">
+<sc-if value="{{s.show}}" hint-placeholder-val="{{true}}">
+<main style="display: flex; flex-wrap: wrap; gap: 56px; align-items: flex-start">
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 18px">
+<div class="stage" style="height: 660px; width: 100%; display: flex; align-items: center; justify-content: center">
+<div class="spot" aria-hidden="true"></div>
+<button type="button" class="art" onClick="{{openZoom}}" aria-label="View {{s.title}} larger"><img src="{{s.img}}" alt="{{s.title}} by {{s.artist}}"></button>
+</div>
+<span class="hint"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"></circle><path d="M11 11l3.5 3.5M7 4.8v4.4M4.8 7h4.4"></path></svg>Select the painting to view it larger</span>
+</div>
+<div style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 26px">
+<div class="glass rise" style="border-radius: 16px; padding: 26px 28px; display: flex; flex-direction: column; gap: 8px">
+<h1 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-weight: 500; font-size: 36px; line-height: 1.08">{{s.title}}</h1>
+<span class="rule" aria-hidden="true"></span>
+<div style="font-family: 'Work Sans', sans-serif; font-size: 15px; font-weight: 600">{{s.artist}}</div>
+<div style="font-family: 'Work Sans', sans-serif; font-size: 14px; color: #5E5A52">{{s.year}} · Oil on canvas</div>
+<sc-if value="{{s.revealed}}" hint-placeholder-val="{{false}}">
+<div class="rise" style="border-top: 1px solid rgba(34, 32, 28, 0.14); margin-top: 14px; padding-top: 16px; display: flex; flex-direction: column; gap: 12px">
+<div class="tag lead" style="font-weight: 600; color: #7A5230">{{s.movement}}</div>
+<p class="drop" style="margin: 0; font-size: 17px; line-height: 1.65">{{s.explanation}}</p>
+</div>
+</sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-if value="{{s.notRevealed}}" hint-placeholder-val="{{true}}">
+<div class="tag rise d1 lead" style="font-weight: 600; color: #5E5A52; margin-bottom: 4px">Which movement?</div>
+</sc-if>
+<sc-if value="{{s.revealed}}" hint-placeholder-val="{{false}}">
+<div role="status" class="rise" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 27px; font-weight: 600; margin-bottom: 2px">{{s.verdict}}</div>
+</sc-if>
+<sc-for list="{{s.movements}}" as="m" hint-placeholder-count="5">
+<button type="button" class="choice rise {{m.cls}}" style="{{m.delay}}" onClick="{{m.pick}}" disabled="{{m.disabled}}"><span>{{m.label}}</span><span class="tag">{{m.mark}}</span><sc-if value="{{m.idle}}" hint-placeholder-val="{{true}}"><svg class="chev" aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3.5L10.5 8 6 12.5"></path></svg></sc-if></button>
+</sc-for>
+<sc-if value="{{s.revealed}}" hint-placeholder-val="{{false}}">
+<button type="button" class="next rise d2" onClick="{{next}}" style="margin-top: 12px">Next painting<svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9h11M10 4.5L14.5 9 10 13.5"></path></svg></button>
+</sc-if>
+</div>
+</div>
+</main>
+</sc-if>
+</sc-for>
+</div>
+</div>
+<sc-if value="{{zoom}}" hint-placeholder-val="{{false}}">
+<div class="scrim" role="dialog" aria-modal="true" aria-label="{{cur.title}}, enlarged">
+<button type="button" class="scrim-bg" onClick="{{closeZoom}}" aria-label="Close enlarged view"></button>
+<button type="button" class="close glass" onClick="{{closeZoom}}" aria-label="Close"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"></path></svg></button>
+<figure>
+<img src="{{cur.img}}" alt="{{cur.title}} by {{cur.artist}}">
+<figcaption class="glass" style="padding: 10px 18px; border-radius: 999px; font-family: 'Work Sans', sans-serif; font-size: 14px"><em style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 18px">{{cur.title}}</em> · {{cur.artist}}, {{cur.year}}</figcaption>
+</figure>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ambientGlow":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 0, picked: null, zoom: false };
+  }
+  renderVals() {
+    const P = [
+      { img: '/images/The Swing, Fragonard.jpg', title: 'The Swing', artist: 'Jean-Honoré Fragonard', year: '1767', movement: 'Rococo', explanation: 'The Swing is a quintessential Rococo painting, characterized by its playful subject matter, pastel colors, and ornate details. It reflects the frivolity and elegance of the 18th-century French aristocracy.' },
+      { img: '/images/Wanderer above the Sea of Fog, Friedrich.jpeg', title: 'Wanderer above the Sea of Fog', artist: 'Caspar David Friedrich', year: 'c. 1818', movement: 'Romantic', explanation: 'Wanderer above the Sea of Fog exemplifies the Romantic emphasis on nature’s sublime power and the individual’s relationship with it.' },
+      { img: '/images/The Gleaners, Millet.jpg', title: 'The Gleaners', artist: 'Jean-François Millet', year: '1857', movement: 'Realist', explanation: 'The Gleaners is a Realist painting that depicts three peasant women gleaning a field of stray grains of wheat after the harvest. Millet’s focus on the dignity of labor and the harsh realities of rural life exemplifies the principles of Realism.' }
+    ];
+    const M = ['Rococo', 'Neo-Classical', 'Romantic', 'Realist', 'Impressionist'];
+    const glow = this.props.ambientGlow ?? true;
+    const i = this.state.i;
+    const picked = this.state.picked;
+    const revealed = picked !== null;
+    const n = i + 3;
+    const slides = P.map((p, k) => {
+      const current = k === i;
+      const correct = revealed && picked === p.movement;
+      const movements = current ? M.map((m, j) => {
+        let s = 'idle';
+        if (revealed) s = m === p.movement ? 'answer' : (m === picked ? 'wrong' : 'dim');
+        return {
+          label: m,
+          cls: 'is-' + s,
+          idle: s === 'idle',
+          disabled: revealed,
+          delay: 'animation-delay: ' + (0.12 + j * 0.05).toFixed(2) + 's',
+          mark: s === 'answer' ? (correct ? 'Your pick' : 'Answer') : (s === 'wrong' ? 'Your pick' : ''),
+          pick: () => { if (this.state.picked === null) this.setState({ picked: m }); }
+        };
+      }) : [];
+      return {
+        ...p,
+        show: current,
+        glowOn: current && glow,
+        revealed: current && revealed,
+        notRevealed: current && !revealed,
+        verdict: correct ? 'Correct. This is ' + p.movement + '.' : 'Not quite. This is ' + p.movement + '.',
+        movements
+      };
+    });
+    const ticks = [1, 2, 3, 4, 5, 6, 7, 8].map((k) => ({
+      style: 'width: ' + (k === n ? 26 : 12) + 'px; background: ' + (k < n ? '#22201C' : (k === n ? '#A9843F' : 'rgba(34, 32, 28, 0.18)'))
+    }));
+    return {
+      slides, ticks, n,
+      cur: P[i],
+      zoom: this.state.zoom,
+      openZoom: () => this.setState({ zoom: true }),
+      closeZoom: () => this.setState({ zoom: false }),
+      next: () => this.setState({ i: (i + 1) % P.length, picked: null })
+    };
+  }
+}
+</script>
+</body>
+</html>

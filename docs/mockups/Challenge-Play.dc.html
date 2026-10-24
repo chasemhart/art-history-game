@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Challenge: Sort by movement</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&amp;family=Work+Sans:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22201C}a:hover{color:#7A5230}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes artIn{from{opacity:0;transform:scale(.985);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+@keyframes glowIn{from{opacity:0}to{opacity:.24}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+@keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.18);color:#7A5230}100%{transform:scale(1)}}
+@keyframes drain{0%,33.3%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes laurel{0%{transform:scale(.7) rotate(-8deg);opacity:.4}60%{transform:scale(1.15) rotate(3deg);opacity:1}100%{transform:none}}
+@keyframes chip{from{opacity:0;transform:translateY(10px) scale(.95)}to{opacity:1;transform:none}}
+.glow{position:absolute;left:-10%;top:-10%;width:120%;height:120%;object-fit:cover;filter:blur(90px) saturate(1.15);opacity:.24;pointer-events:none;animation:glowIn 1.2s ease both}
+.glass{background:rgba(251,250,247,.62);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:1px solid rgba(255,255,255,.7);box-shadow:0 12px 36px -14px rgba(34,32,28,.28),inset 0 1px 0 rgba(255,255,255,.75)}
+.tab{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:999px;text-decoration:none;color:#5E5A52;transition:background-color .25s,color .25s}
+.tab:hover{background:rgba(34,32,28,.07);color:#22201C}
+.tab.is-active{background:#22201C;color:#FBFAF7}
+.tag{font-family:'Work Sans',sans-serif;font-size:12px;letter-spacing:1.2px;text-transform:uppercase}
+.score{display:inline-block;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:34px;line-height:1;color:#22201C;font-variant-numeric:lining-nums tabular-nums}
+.score.bump{animation:bump .6s cubic-bezier(.2,.8,.2,1)}
+.laurel{display:inline-flex;align-items:center;gap:6px;color:#8C6A2F;transition:color .3s,opacity .3s}
+.laurel.is-off{color:#9A948A}
+.laurel.is-on svg{animation:laurel .7s cubic-bezier(.2,.8,.2,1) both}
+.art{all:unset;cursor:zoom-in;display:flex;max-width:100%;max-height:100%;border-radius:2px;box-shadow:0 22px 44px -12px rgba(34,32,28,.38),0 3px 8px rgba(34,32,28,.16);transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s cubic-bezier(.2,.8,.2,1);animation:artIn .8s cubic-bezier(.2,.8,.2,1) both}
+.art:hover{transform:translateY(-4px);box-shadow:0 40px 70px -20px rgba(34,32,28,.45),0 6px 14px rgba(34,32,28,.16)}
+.art:focus-visible{outline:2px solid #7A5230;outline-offset:6px}
+.art img{display:block;max-width:100%;max-height:600px;object-fit:contain;border-radius:2px}
+.swiftwrap{width:100%;max-width:520px;display:flex;align-items:center;gap:12px}
+.swifttrack{flex:1;height:3px;border-radius:2px;background:rgba(34,32,28,.12);overflow:hidden}
+.swift{height:100%;background:#A9843F;transform-origin:left;animation:drain 45s linear both}
+.swift.is-paused{animation-play-state:paused}
+.rise{animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+.choice{position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;min-height:52px;padding:12px 18px;box-sizing:border-box;border-radius:10px;border:1px solid rgba(34,32,28,.14);background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#22201C;font-family:'Source Serif 4',Georgia,serif;font-size:18px;text-align:left;cursor:pointer;box-shadow:0 1px 2px rgba(34,32,28,.06);transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,border-color .25s,color .45s,background-color .25s}
+.choice::before{content:'';position:absolute;inset:0;background:#22201C;transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.65,0,.35,1)}
+.choice>span{position:relative}
+.choice.is-idle:hover{transform:translateY(-2px);border-color:rgba(34,32,28,.32);background:rgba(255,255,255,.8);box-shadow:0 14px 28px -14px rgba(34,32,28,.4)}
+.choice.is-idle:active{transform:translateY(0) scale(.985)}
+.choice:focus-visible{outline:2px solid #7A5230;outline-offset:3px}
+.choice:disabled{cursor:default}
+.choice.is-answer{color:#FBFAF7;border-color:#22201C}
+.choice.is-answer::before{transform:scaleX(1)}
+.choice.is-wrong{color:#7A5230;border:1px dashed #7A5230;background:rgba(255,255,255,.35);animation:shake .45s ease}
+.choice.is-dim{color:#66625A;background:rgba(255,255,255,.25);border-color:rgba(34,32,28,.1);box-shadow:none}
+.chip{display:inline-flex;align-items:baseline;gap:6px;padding:6px 12px;border-radius:999px;border:1px solid rgba(140,106,47,.35);background:rgba(255,255,255,.6);font-family:'Work Sans',sans-serif;font-size:13px;color:#4A3A1E;animation:chip .5s cubic-bezier(.2,.8,.2,1) both}
+.chip b{font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;font-weight:700;color:#22201C}
+.next{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:54px;border:0;border-radius:10px;background:#22201C;color:#FBFAF7;font-family:'Work Sans',sans-serif;font-size:15px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;text-decoration:none;cursor:pointer;box-shadow:0 14px 28px -14px rgba(34,32,28,.6);transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,background-color .25s}
+.next:hover{transform:translateY(-2px);background:#36332D;color:#FBFAF7}
+.next:active{transform:scale(.985)}
+.next svg{transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.next:hover svg{transform:translateX(4px)}
+.next:focus-visible{outline:2px solid #7A5230;outline-offset:3px}
+@media (prefers-reduced-motion: reduce){*,*::before{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+<div style="position: relative; overflow: clip; box-sizing: border-box; min-height: 900px; background: #EDE9E1; color: #22201C; font-family: 'Source Serif 4', Georgia, serif">
+<sc-for list="{{slides}}" as="s" hint-placeholder-count="1">
+<sc-if value="{{s.show}}" hint-placeholder-val="{{true}}">
+<img class="glow" src="{{s.img}}" alt="" aria-hidden="true">
+</sc-if>
+</sc-for>
+<div style="position: relative; z-index: 1; box-sizing: border-box; padding: 22px 48px 72px">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 34px">
+<header class="glass" style="position: sticky; top: 16px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 22px 10px 22px; border-radius: 16px">
+<div style="display: flex; align-items: center; gap: 22px; flex-wrap: wrap">
+<div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 600">Art History Study</div>
+<nav aria-label="Modes" style="display: flex; gap: 4px; font-family: 'Work Sans', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase">
+<a href="#" class="tab">Study</a>
+<a href="#" class="tab is-active" aria-current="page">Challenge</a>
+</nav>
+</div>
+<div style="display: flex; align-items: center; gap: 26px; flex-wrap: wrap">
+<div style="display: flex; align-items: baseline; gap: 10px">
+<span class="tag" style="color: #5E5A52">Score</span>
+<sc-if value="{{showA}}" hint-placeholder-val="{{true}}"><span class="score bump" aria-live="polite">{{scoreText}}</span></sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{false}}"><span class="score bump" aria-live="polite">{{scoreText}}</span></sc-if>
+</div>
+<div class="laurel {{laurelCls}}" title="Laurel streak: consecutive correct answers">
+<sc-if value="{{showA}}" hint-placeholder-val="{{true}}"><svg aria-hidden="true" width="34" height="22" viewBox="0 0 34 22" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M17 20.5C10 19.5 5 14.5 4 5"></path><path d="M17 20.5C24 19.5 29 14.5 30 5"></path><g fill="currentColor" stroke="none"><ellipse cx="4.6" cy="7.5" rx="1.3" ry="2.7" transform="rotate(-15 4.6 7.5)"></ellipse><ellipse cx="6.6" cy="12.4" rx="1.3" ry="2.7" transform="rotate(-40 6.6 12.4)"></ellipse><ellipse cx="10.4" cy="16.4" rx="1.3" ry="2.7" transform="rotate(-62 10.4 16.4)"></ellipse><ellipse cx="29.4" cy="7.5" rx="1.3" ry="2.7" transform="rotate(15 29.4 7.5)"></ellipse><ellipse cx="27.4" cy="12.4" rx="1.3" ry="2.7" transform="rotate(40 27.4 12.4)"></ellipse><ellipse cx="23.6" cy="16.4" rx="1.3" ry="2.7" transform="rotate(62 23.6 16.4)"></ellipse></g></svg></sc-if>
+<sc-if value="{{showB}}" hint-placeholder-val="{{false}}"><svg aria-hidden="true" width="34" height="22" viewBox="0 0 34 22" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M17 20.5C10 19.5 5 14.5 4 5"></path><path d="M17 20.5C24 19.5 29 14.5 30 5"></path><g fill="currentColor" stroke="none"><ellipse cx="4.6" cy="7.5" rx="1.3" ry="2.7" transform="rotate(-15 4.6 7.5)"></ellipse><ellipse cx="6.6" cy="12.4" rx="1.3" ry="2.7" transform="rotate(-40 6.6 12.4)"></ellipse><ellipse cx="10.4" cy="16.4" rx="1.3" ry="2.7" transform="rotate(-62 10.4 16.4)"></ellipse><ellipse cx="29.4" cy="7.5" rx="1.3" ry="2.7" transform="rotate(15 29.4 7.5)"></ellipse><ellipse cx="27.4" cy="12.4" rx="1.3" ry="2.7" transform="rotate(40 27.4 12.4)"></ellipse><ellipse cx="23.6" cy="16.4" rx="1.3" ry="2.7" transform="rotate(62 23.6 16.4)"></ellipse></g></svg></sc-if>
+<span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 700">{{multText}}</span>
+<span class="tag" style="color: #5E5A52">{{streakText}}</span>
+</div>
+<span style="font-family: 'Work Sans', sans-serif; font-size: 14px; color: #5E5A52">Painting {{n}} of 8</span>
+</div>
+</header>
+<sc-for list="{{slides}}" as="s" hint-placeholder-count="1">
+<sc-if value="{{s.show}}" hint-placeholder-val="{{true}}">
+<main style="display: flex; flex-wrap: wrap; gap: 56px; align-items: flex-start">
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 22px">
+<div style="height: 620px; width: 100%; display: flex; align-items: center; justify-content: center">
+<button type="button" class="art" aria-label="View {{s.title}} larger"><img src="{{s.img}}" alt="{{s.title}} by {{s.artist}}"></button>
+</div>
+<sc-if value="{{speedOn}}" hint-placeholder-val="{{true}}">
+<div class="swiftwrap" aria-hidden="true">
+<span class="tag" style="color: #8C6A2F; font-weight: 600">Swift bonus</span>
+<div class="swifttrack"><div class="swift {{s.barCls}}"></div></div>
+</div>
+</sc-if>
+</div>
+<div style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<div class="glass rise" style="border-radius: 16px; padding: 24px 28px; display: flex; flex-direction: column; gap: 8px">
+<h1 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-weight: 500; font-size: 36px; line-height: 1.08">{{s.title}}</h1>
+<div style="font-family: 'Work Sans', sans-serif; font-size: 15px; font-weight: 600">{{s.artist}}</div>
+<div style="font-family: 'Work Sans', sans-serif; font-size: 14px; color: #5E5A52">{{s.year}} · Oil on canvas</div>
+<sc-if value="{{s.revealed}}" hint-placeholder-val="{{false}}">
+<div class="rise" style="border-top: 1px solid rgba(34, 32, 28, 0.14); margin-top: 12px; padding-top: 14px; display: flex; flex-direction: column; gap: 10px">
+<div class="tag" style="font-weight: 600; color: #7A5230">{{s.movement}}</div>
+<p style="margin: 0; font-size: 16px; line-height: 1.6">{{s.explanation}}</p>
+</div>
+</sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-if value="{{s.notRevealed}}" hint-placeholder-val="{{true}}">
+<div class="tag rise" style="font-weight: 600; color: #5E5A52; margin-bottom: 4px">Which movement?</div>
+</sc-if>
+<sc-if value="{{s.revealed}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 4px">
+<div role="status" class="rise" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 27px; font-weight: 600">{{s.verdict}}</div>
+<sc-if value="{{gotIt}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span class="chip" style="animation-delay: .1s"><b>+100</b>Correct</span>
+<sc-if value="{{hasMult}}" hint-placeholder-val="{{true}}"><span class="chip" style="animation-delay: .2s"><b>{{multText}}</b>Laurel</span></sc-if>
+<sc-if value="{{hasSwift}}" hint-placeholder-val="{{true}}"><span class="chip" style="animation-delay: .3s"><b>+{{swiftPts}}</b>Swift</span></sc-if>
+<span class="chip" style="animation-delay: .4s; background: #22201C; color: #FBFAF7; border-color: #22201C"><b style="color: #FBFAF7">+{{lastPts}}</b>this painting</span>
+</div>
+</sc-if>
+<sc-if value="{{missed}}" hint-placeholder-val="{{false}}">
+<div class="rise" style="font-family: 'Work Sans', sans-serif; font-size: 14px; color: #5E5A52">Your laurel resets. No points are lost.</div>
+</sc-if>
+</div>
+</sc-if>
+<sc-for list="{{s.movements}}" as="m" hint-placeholder-count="5">
+<button type="button" class="choice rise {{m.cls}}" style="{{m.delay}}" onClick="{{m.pick}}" disabled="{{m.disabled}}"><span>{{m.label}}</span><span class="tag">{{m.mark}}</span></button>
+</sc-for>
+<sc-if value="{{showNext}}" hint-placeholder-val="{{false}}">
+<button type="button" class="next rise" onClick="{{next}}" style="margin-top: 12px">Next painting<svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9h11M10 4.5L14.5 9 10 13.5"></path></svg></button>
+</sc-if>
+<sc-if value="{{showFinish}}" hint-placeholder-val="{{false}}">
+<a href="Challenge-End.dc.html" class="next rise" style="margin-top: 12px">Finish the round<svg aria-hidden="true" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9h11M10 4.5L14.5 9 10 13.5"></path></svg></a>
+</sc-if>
+</div>
+</div>
+</main>
+</sc-if>
+</sc-for>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"speedBonus":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 0, picked: null, start: Date.now(), score: 420, streak: 2, last: null };
+  }
+  renderVals() {
+    const P = [
+      { img: '/images/The Swing, Fragonard.jpg', title: 'The Swing', artist: 'Jean-Honoré Fragonard', year: '1767', movement: 'Rococo', explanation: 'The Swing is a quintessential Rococo painting, characterized by its playful subject matter, pastel colors, and ornate details. It reflects the frivolity and elegance of the 18th-century French aristocracy.' },
+      { img: '/images/Wanderer above the Sea of Fog, Friedrich.jpeg', title: 'Wanderer above the Sea of Fog', artist: 'Caspar David Friedrich', year: 'c. 1818', movement: 'Romantic', explanation: 'Wanderer above the Sea of Fog exemplifies the Romantic emphasis on nature’s sublime power and the individual’s relationship with it.' },
+      { img: '/images/The Gleaners, Millet.jpg', title: 'The Gleaners', artist: 'Jean-François Millet', year: '1857', movement: 'Realist', explanation: 'The Gleaners is a Realist painting that depicts three peasant women gleaning a field of stray grains of wheat after the harvest. Millet’s focus on the dignity of labor and the harsh realities of rural life exemplifies the principles of Realism.' }
+    ];
+    const M = ['Rococo', 'Neo-Classical', 'Romantic', 'Realist', 'Impressionist'];
+    const speedOn = this.props.speedBonus ?? true;
+    const st = this.state;
+    const p = P[st.i];
+    const revealed = st.picked !== null;
+    const correct = revealed && st.picked === p.movement;
+    const multOf = (streak) => 1 + 0.25 * Math.min(Math.max(streak - 1, 0), 4);
+    const pick = (m) => {
+      if (this.state.picked !== null) return;
+      const s = this.state;
+      const secs = (Date.now() - s.start) / 1000;
+      if (m === P[s.i].movement) {
+        const streak = s.streak + 1;
+        const mult = multOf(streak);
+        let swift = 0;
+        if (speedOn) swift = secs <= 15 ? 50 : (secs >= 45 ? 0 : Math.round((50 * (45 - secs) / 30) / 5) * 5);
+        const pts = Math.round(100 * mult) + swift;
+        this.setState({ picked: m, streak, score: s.score + pts, last: { pts, mult, swift } });
+      } else {
+        this.setState({ picked: m, streak: 0, last: { pts: 0, mult: 1, swift: 0 } });
+      }
+    };
+    const slides = P.map((q, k) => {
+      const current = k === st.i;
+      const movements = current ? M.map((m, j) => {
+        let s = 'idle';
+        if (revealed) s = m === q.movement ? 'answer' : (m === st.picked ? 'wrong' : 'dim');
+        return {
+          label: m,
+          cls: 'is-' + s,
+          disabled: revealed,
+          delay: 'animation-delay: ' + (0.12 + j * 0.05).toFixed(2) + 's',
+          mark: s === 'answer' ? (correct ? 'Your pick' : 'Answer') : (s === 'wrong' ? 'Your pick' : ''),
+          pick: () => pick(m)
+        };
+      }) : [];
+      return {
+        ...q,
+        show: current,
+        revealed: current && revealed,
+        notRevealed: current && !revealed,
+        barCls: revealed ? 'is-paused' : '',
+        verdict: correct ? 'Correct. This is ' + q.movement + '.' : 'Not quite. This is ' + q.movement + '.',
+        movements
+      };
+    });
+    const mult = st.last && revealed ? st.last.mult : multOf(st.streak + 1);
+    const isLast = st.i === P.length - 1;
+    return {
+      slides, speedOn,
+      n: st.i + 4,
+      showA: !revealed, showB: revealed,
+      scoreText: st.score.toLocaleString('en-US'),
+      laurelCls: st.streak > 0 ? 'is-on' : 'is-off',
+      multText: '×' + (revealed && correct ? st.last.mult : multOf(st.streak + 1)).toFixed(2).replace(/\.?0+$/, ''),
+      streakText: st.streak > 0 ? st.streak + ' in a row' : 'No streak',
+      gotIt: revealed && correct,
+      missed: revealed && !correct,
+      hasMult: revealed && correct && st.last.mult > 1,
+      hasSwift: revealed && correct && st.last.swift > 0,
+      swiftPts: st.last ? st.last.swift : 0,
+      lastPts: st.last ? st.last.pts : 0,
+      showNext: revealed && !isLast,
+      showFinish: revealed && isLast,
+      next: () => this.setState({ i: st.i + 1, picked: null, start: Date.now(), last: null })
+    };
+  }
+}
+</script>
+</body>
+</html>
