@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Museum Wall, Modern: Identify on phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&amp;family=Work+Sans:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22201C}a:hover{color:#7A5230}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes artIn{from{opacity:0;filter:blur(8px)}to{opacity:1;filter:none}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+.glow{position:absolute;left:-20%;top:-10%;width:140%;height:70%;object-fit:cover;filter:blur(70px) saturate(1.15);opacity:.26;pointer-events:none}
+.glass{background:rgba(251,250,247,.62);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:1px solid rgba(255,255,255,.7);box-shadow:0 12px 32px -14px rgba(34,32,28,.3),inset 0 1px 0 rgba(255,255,255,.75)}
+.art{display:block;width:100%;height:auto;border-radius:3px;box-shadow:0 18px 36px -12px rgba(34,32,28,.42),0 2px 6px rgba(34,32,28,.16);animation:artIn .8s ease both}
+.rise{animation:rise .55s cubic-bezier(.2,.8,.2,1) both}
+.d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}.d4{animation-delay:.32s}
+.tag{font-family:'Work Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.3px;text-transform:uppercase;color:#5E5A52}
+.field{display:flex;flex-direction:column;gap:6px}
+.input{width:100%;box-sizing:border-box;min-height:48px;padding:12px 14px;border-radius:10px;border:1px solid rgba(34,32,28,.16);background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font-family:'Source Serif 4',Georgia,serif;font-size:17px;color:#22201C;outline:none;transition:border-color .25s,box-shadow .25s,background-color .25s}
+.input::placeholder{color:#7C776E}
+.input:hover{border-color:rgba(34,32,28,.3)}
+.input:focus{border-color:#7A5230;background:rgba(255,255,255,.85);box-shadow:0 0 0 4px rgba(122,82,48,.16)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;border-radius:10px;font-family:'Work Sans',sans-serif;font-size:14px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,background-color .25s}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible{outline:2px solid #7A5230;outline-offset:3px}
+.btn-ink{border:0;background:#22201C;color:#FBFAF7;box-shadow:0 14px 28px -14px rgba(34,32,28,.6)}
+.btn-ink:hover{background:#36332D;transform:translateY(-2px)}
+.btn-ghost{border:1px solid rgba(34,32,28,.2);background:rgba(255,255,255,.5);color:#22201C}
+.btn-ghost:hover{background:rgba(255,255,255,.85);transform:translateY(-2px)}
+.btn svg{transition:transform .3s}
+.btn-ink:hover svg{transform:translateX(3px)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(34,32,28,.1)}
+.row:last-child{border-bottom:0}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;font-family:'Work Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:.6px;white-space:nowrap;animation:pop .5s cubic-bezier(.2,.8,.2,1) both}
+.badge.is-correct{background:#22201C;color:#FBFAF7}
+.badge.is-close{border:1px solid #7A5230;color:#7A5230;background:rgba(255,255,255,.6)}
+.badge.is-wrong{border:1px dashed #66625A;color:#4F4B44;background:rgba(255,255,255,.4)}
+@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; box-sizing: border-box; overflow-x: hidden; overflow-y: auto; background: #EDE9E1; color: #22201C; font-family: 'Source Serif 4', Georgia, serif">
+<img class="glow" src="/images/The Raft of the Medusa, Gericault.jpg" alt="" aria-hidden="true">
+<div style="position: relative; z-index: 1; padding: 14px 18px 24px; display: flex; flex-direction: column; gap: 16px">
+<header class="glass" style="position: sticky; top: 10px; z-index: 5; display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-radius: 14px">
+<div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-weight: 600">Identify</div>
+<div style="font-family: 'Work Sans', sans-serif; font-size: 13px; color: #5E5A52">Painting 3 of 8</div>
+</header>
+<img class="art" src="/images/The Raft of the Medusa, Gericault.jpg" alt="A painting to identify">
+<sc-if value="{{asking}}" hint-placeholder-val="{{true}}">
+<div class="glass rise" style="border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+<div style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 600; line-height: 1.1">Name this work</div>
+<div class="field">
+<label class="tag" for="f-title">Title</label>
+<input id="f-title" class="input" type="text" autocomplete="off" placeholder="Try “raft of medusa”" value="{{title}}" onChange="{{onTitle}}">
+</div>
+<div class="field">
+<label class="tag" for="f-artist">Artist’s last name</label>
+<input id="f-artist" class="input" type="text" autocomplete="off" placeholder="Try a typo, like Gericalt" value="{{artist}}" onChange="{{onArtist}}">
+</div>
+<div class="field">
+<label class="tag" for="f-movement">Movement</label>
+<input id="f-movement" class="input" type="text" autocomplete="off" placeholder="e.g. Rococo" value="{{movement}}" onChange="{{onMovement}}">
+</div>
+<button type="button" class="btn btn-ink" onClick="{{check}}" style="width: 100%; margin-top: 4px">Check answers</button>
+</div>
+</sc-if>
+<sc-if value="{{graded}}" hint-placeholder-val="{{false}}">
+<div class="glass rise" style="border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-weight: 500; font-size: 28px; line-height: 1.1">The Raft of the Medusa</h1>
+<div style="font-family: 'Work Sans', sans-serif; font-size: 13px; color: #5E5A52">Théodore Géricault · 1818 to 1819 · Romantic</div>
+</div>
+<div style="display: flex; flex-direction: column; border-top: 1px solid rgba(34, 32, 28, 0.14)">
+<sc-for list="{{results}}" as="r" hint-placeholder-count="3">
+<div class="row rise" style="{{r.delay}}">
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+<span class="tag">{{r.label}}</span>
+<span style="font-size: 16px; overflow-wrap: anywhere">{{r.wrote}}</span>
+<span style="{{r.noteStyle}}">{{r.note}}</span>
+</div>
+<span class="badge {{r.cls}}" style="{{r.delay}}"><sc-if value="{{r.isCorrect}}" hint-placeholder-val="{{true}}"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 6.5l2.5 2.5L10 3.5"></path></svg></sc-if><sc-if value="{{r.isClose}}" hint-placeholder-val="{{false}}"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 6h8"></path></svg></sc-if><sc-if value="{{r.isWrong}}" hint-placeholder-val="{{false}}"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3l6 6M9 3l-6 6"></path></svg></sc-if>{{r.badge}}</span>
+</div>
+</sc-for>
+</div>
+<p class="rise d4" style="margin: 0; font-size: 15px; line-height: 1.6">The Raft of the Medusa is a painting about the aftermath of a naval disaster that was infamous at the time. Géricault’s dramatic composition and emotional intensity are hallmarks of Romanticism.</p>
+<div class="rise d4" style="display: flex; gap: 10px; margin-top: 4px">
+<button type="button" class="btn btn-ghost" onClick="{{retry}}" style="flex: 1 1 0">Try again</button>
+<button type="button" class="btn btn-ink" onClick="{{retry}}" style="flex: 1.4 1 0">Next<svg aria-hidden="true" width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9h11M10 4.5L14.5 9 10 13.5"></path></svg></button>
+</div>
+</div>
+</sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { title: '', artist: '', movement: '', graded: false };
+  }
+  renderVals() {
+    const norm = (s) => (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+    const lev = (a, b) => {
+      const d = [];
+      for (let i = 0; i <= a.length; i++) { d[i] = [i]; }
+      for (let j = 1; j <= b.length; j++) { d[0][j] = j; }
+      for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+          d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+        }
+      }
+      return d[a.length][b.length];
+    };
+    const gradeText = (raw, accepted, display) => {
+      const v = norm(raw);
+      if (!v) return { status: 'wrong', note: 'Answer: ' + display };
+      if (accepted.includes(v)) return { status: 'correct', note: '' };
+      const near = accepted.some((a) => lev(v, a) <= (a.length > 6 ? 2 : 1));
+      if (near) return { status: 'correct', note: 'Spelled “' + display + '”' };
+      return { status: 'wrong', note: 'Answer: ' + display };
+    };
+    const gradeTitle = (raw) => {
+      const v = norm(raw).replace(/^(the|le) /, '');
+      const full = ['raft of the medusa', 'raft of medusa', 'radeau de la meduse'];
+      if (!v) return { status: 'wrong', note: 'Answer: The Raft of the Medusa' };
+      if (full.includes(v) || full.some((a) => lev(v, a) <= 3)) return { status: 'correct', note: '' };
+      if (v.includes('medusa') || v.includes('raft')) return { status: 'close', note: 'Nearly: The Raft of the Medusa' };
+      return { status: 'wrong', note: 'Answer: The Raft of the Medusa' };
+    };
+    const st = this.state;
+    const g = [
+      { label: 'Title', raw: st.title, r: gradeTitle(st.title) },
+      { label: 'Artist', raw: st.artist, r: gradeText(st.artist, ['gericault', 'theodore gericault'], 'Géricault') },
+      { label: 'Movement', raw: st.movement, r: gradeText(st.movement, ['romantic', 'romanticism', 'romantic era', 'romantic period'], 'Romantic') }
+    ];
+    const badgeText = { correct: 'Correct', close: 'Close', wrong: 'Not quite' };
+    const results = g.map((x, k) => ({
+      label: x.label,
+      wrote: x.raw.trim() ? 'You wrote “' + x.raw.trim() + '”' : 'Left blank',
+      note: x.r.note,
+      noteStyle: x.r.note ? "font-family: 'Work Sans', sans-serif; font-size: 12px; color: " + (x.r.status === 'wrong' ? '#4F4B44' : '#7A5230') : 'display: none',
+      cls: 'is-' + x.r.status,
+      badge: badgeText[x.r.status],
+      isCorrect: x.r.status === 'correct',
+      isClose: x.r.status === 'close',
+      isWrong: x.r.status === 'wrong',
+      delay: 'animation-delay: ' + (0.1 + k * 0.1).toFixed(1) + 's'
+    }));
+    return {
+      title: st.title, artist: st.artist, movement: st.movement,
+      asking: !st.graded, graded: st.graded, results,
+      onTitle: (e) => this.setState({ title: e.target.value }),
+      onArtist: (e) => this.setState({ artist: e.target.value }),
+      onMovement: (e) => this.setState({ movement: e.target.value }),
+      check: () => this.setState({ graded: true }),
+      retry: () => this.setState({ title: '', artist: '', movement: '', graded: false })
+    };
+  }
+}
+</script>
+</body>
+</html>
