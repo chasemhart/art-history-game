@@ -45,22 +45,32 @@ art-history-game/
     ├── lib/
     │   ├── rounds.js          Fair shuffling and dealing balanced rounds
     │   ├── rounds.test.js     Automatic checks that rounds are always fair
-    │   ├── grading.js         Checking typed answers (typos, accents, alternate names)
-    │   ├── grading.test.js    Automatic checks for every grading example in the PRD
+    │   ├── round.js           The rules of a round: one answer each, what counts as correct
+    │   ├── groupSort.js       The rules of All at once: each work in one room, check when all are hung
+    │   ├── useHideOnScroll.js When the header slides away and comes back
+    │   ├── images.js          Connects a painting to its web images (srcset, sizes)
+    │   ├── grading.js         Checking typed answers (typos, accents, alternate names, look-alikes)
+    │   ├── grading.test.js    Automatic checks for every agreed grading example
     │   └── useHashRoute.js    Reads the URL to decide which screen to show
+    │       (each logic file has a matching .test.js beside it)
     ├── components/
     │   ├── Header/            Header.jsx + Header.css
     │   ├── ArtworkStage/      Glow, spotlight, corner marks, the painting, zoom trigger
     │   ├── WallLabel/         Title, artist, date, and the revealed description
     │   ├── ChoiceList/        The five movement buttons and their states
     │   ├── ResultRow/         One graded answer in Identify mode
+    │   ├── StatusBadge/       Correct, Close, or Not quite, shared by Identify and the reviews
     │   ├── NextButton/
     │   ├── ProgressTicks/
+    │   ├── ViewSwitch/        Slides between One at a time and All at once
     │   └── ZoomView/
     └── screens/
-        ├── SortScreen.jsx
-        ├── IdentifyScreen.jsx
-        └── ReviewScreen.jsx
+        ├── SortScreen.jsx         Sort, one painting at a time
+        ├── GroupSortScreen.jsx    Sort all at once: eight works into five rooms
+        ├── IdentifyScreen.jsx     Name the work from memory: title, artist, movement
+        ├── ReviewScreen.jsx       The round review for either mode: every painting and how it went
+        ├── PlaceholderScreen.jsx  A calm note for screens not built yet
+        └── screens.css            The shared painting-and-label layout
 ```
 
 The arcade branch adds `src/lib/scoring.js` (+ tests), `src/screens/ChallengeScreen.jsx` and `ChallengeEndScreen.jsx`, arcade components (`Laurel`, `ScoreChips`, `SwiftLine`, `InitialsPlate`, `WallOfPatrons`, `Plaque`), `src/data/blocklist.js`, and `api/scores.js` (a serverless function that runs on Vercel's servers, not in the browser).
@@ -75,6 +85,8 @@ The arcade branch adds `src/lib/scoring.js` (+ tests), `src/screens/ChallengeScr
 
 **Logic lives in `src/lib/` as pure functions with tests.** A pure function takes inputs and returns outputs without touching the screen. That makes rules like grading easy to test automatically: we write down examples ("Gericalt" should count as Géricault) and the computer checks them every time anything changes. *Word to know:* a **test** is a small program that checks another program's behavior.
 
+**One small library for drag and drop (dnd-kit).** Dragging looks simple but has many edge cases: mouse and touch behave differently, a swipe to scroll must not start a drag, the page should scroll when you drag toward its edge, and screen readers need to hear what's happening. dnd-kit handles those, so our code only says what can be dragged and where it can land. Dragging is never the only way: every work can also be selected and then placed in a room, which is how keyboards work, and how anyone who can't drag works.
+
 **A tiny hash router instead of a routing library.** The part of a URL after `#` (like `#/identify`) can say which screen to show. With only a few screens, a 15-line hook is easier to understand than a library and needs no special server settings.
 
 **Data in plain JavaScript files.** Chase can add a painting by copying an entry and editing it. No database is needed for Study.
@@ -83,13 +95,20 @@ The arcade branch adds `src/lib/scoring.js` (+ tests), `src/screens/ChallengeScr
 
 **Leaderboard behind a serverless function (arcade only).** The browser can never be trusted with a database password, because anyone can read code that runs in their browser. A serverless function is a small piece of code that runs on Vercel's servers when called. It holds the secret, checks every score, and talks to the database on the browser's behalf.
 
-## How a change flows (the modern, AI-partnered workflow)
+## How we work together (people and an AI partner)
 
-1. Describe the change to Claude Code in plain language.
-2. Claude Code makes a plan, then edits files on a **branch** (a separate line of work that does not disturb the main version).
-3. Tests, lint, and build run to catch mistakes.
-4. The branch is **pushed** to GitHub, and Vercel automatically builds a **preview URL**: a live, private-ish copy of the app with that change.
-5. Review the preview on a phone and a laptop.
-6. If it is good, the branch is **merged** through a **pull request** (a proposal to combine changes, with a description and a place for comments).
+Working with an AI coding partner well looks much like working with a good colleague. It doesn't look like placing an order and waiting for the result. Describing what you want in a sentence and letting the AI plan and write everything usually produces something that *works*. It rarely produces something *considered*, and it teaches the person almost nothing. We want both a considered app and people who understand it.
 
-Understanding this loop matters more than memorizing syntax: it is how almost all software is made today, with or without AI.
+**1. Lay down shared context first.** Before any code was written for this rebuild, we wrote down the vision, the design rhetoric, the architecture, and the stack (`DESIGN.md` and this file). That context is what lets an AI partner make choices that fit the project instead of generic ones. The better the shared understanding, the better every later conversation goes. When the vision changes, the docs change first.
+
+**2. Talk before building.** Each piece of work starts as a conversation: what we're making, why, what the options are, and what each one costs. Design and product decisions belong to the people. The AI's job is to bring options, reasons, and honest trade-offs, and to ask when the docs are silent rather than quietly deciding.
+
+**3. Both of us touch the code.** Sometimes the AI writes a piece and walks through it. Sometimes a person writes it and the AI reviews. Sometimes the AI writes small parts and the person assembles them, which is one of the best ways to learn how a program fits together: you come to know what each piece is and why it lives where it does. Anyone should be able to ask "why is this here?" about any line and get a real answer.
+
+**4. Work in small steps with human checkpoints.** Changes happen on a **branch** (a separate line of work that doesn't disturb the main version). Tests, lint, and build run to catch mechanical mistakes, but they don't replace understanding. A person reads every change in their editor before it is **committed** (saved as a snapshot) and **pushed** to GitHub. Nothing leaves the computer without a person deciding it should.
+
+**5. Look at it for real.** Each push makes Vercel build a **preview URL**: a live copy of the app with that change. Review it on a phone and a laptop, against the design intent and not only "does it work".
+
+**6. Merge with a record.** A **pull request** proposes combining the branch into the main line, with a description of what changed and why, and a place to discuss it. Merging is a deliberate decision, not a formality.
+
+The tools will keep changing. The habits that last are writing down intent before building, talking through decisions, understanding what you ship, and keeping a person at every checkpoint.

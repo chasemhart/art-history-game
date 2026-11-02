@@ -50,7 +50,7 @@ Three families, each with one job. Load only these weights.
 
 | Role | Family and weights | Why |
 | --- | --- | --- |
-| Display: titles of works, verdicts, wordmark, big numbers | Cormorant Garamond 500, 600, 700, italic 500 | A Garamond descendant: the voice of fine printing and exhibition catalogues. **Titles of works are italic**, the convention for titles of artworks in museum labels and art history writing. |
+| Display: titles of works, verdicts, wordmark, big numbers | Cormorant Garamond 500, 600, italic 500 (add 700 only if a screen uses it) | A Garamond descendant: the voice of fine printing and exhibition catalogues. **Titles of works are italic**, the convention for titles of artworks in museum labels and art history writing. |
 | Reading: descriptions, answers, body | Source Serif 4, 400 and 600 (optical sizes) | A serif designed for comfortable screen reading. Chase's descriptions are long-form prose and deserve a book face. |
 | Labels: tabs, field labels, meta, buttons | Work Sans 500 and 600, often uppercase with letter-spacing | Museum wayfinding and label metadata are traditionally set in clean sans serifs. Small caps-style labels read as "information about the art" rather than "the art". |
 

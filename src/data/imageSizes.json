@@ -1,0 +1,442 @@
+{
+  "the-swing": {
+    "width": 500,
+    "height": 646,
+    "variants": [
+      {
+        "file": "the-swing-800.webp",
+        "width": 500
+      }
+    ]
+  },
+  "oath-of-the-horatii": {
+    "width": 1280,
+    "height": 993,
+    "variants": [
+      {
+        "file": "oath-of-the-horatii-800.webp",
+        "width": 800
+      },
+      {
+        "file": "oath-of-the-horatii-1600.webp",
+        "width": 1280
+      }
+    ]
+  },
+  "liberty-leading-the-people": {
+    "width": 1280,
+    "height": 1024,
+    "variants": [
+      {
+        "file": "liberty-leading-the-people-800.webp",
+        "width": 800
+      },
+      {
+        "file": "liberty-leading-the-people-1600.webp",
+        "width": 1280
+      }
+    ]
+  },
+  "the-stonebreakers": {
+    "width": 1315,
+    "height": 800,
+    "variants": [
+      {
+        "file": "the-stonebreakers-800.webp",
+        "width": 800
+      },
+      {
+        "file": "the-stonebreakers-1600.webp",
+        "width": 1315
+      }
+    ]
+  },
+  "a-burial-at-ornans": {
+    "width": 1600,
+    "height": 735,
+    "variants": [
+      {
+        "file": "a-burial-at-ornans-800.webp",
+        "width": 800
+      },
+      {
+        "file": "a-burial-at-ornans-1600.webp",
+        "width": 1600
+      }
+    ]
+  },
+  "the-third-of-may-1808": {
+    "width": 1280,
+    "height": 989,
+    "variants": [
+      {
+        "file": "the-third-of-may-1808-800.webp",
+        "width": 800
+      },
+      {
+        "file": "the-third-of-may-1808-1600.webp",
+        "width": 1280
+      }
+    ]
+  },
+  "the-death-of-marat": {
+    "width": 960,
+    "height": 1235,
+    "variants": [
+      {
+        "file": "the-death-of-marat-800.webp",
+        "width": 622
+      },
+      {
+        "file": "the-death-of-marat-1600.webp",
+        "width": 960
+      }
+    ]
+  },
+  "impression-sunrise": {
+    "width": 1280,
+    "height": 993,
+    "variants": [
+      {
+        "file": "impression-sunrise-800.webp",
+        "width": 800
+      },
+      {
+        "file": "impression-sunrise-1600.webp",
+        "width": 1280
+      }
+    ]
+  },
+  "the-secret-meeting": {
+    "width": 597,
+    "height": 800,
+    "variants": [
+      {
+        "file": "the-secret-meeting-800.webp",
+        "width": 597
+      }
+    ]
+  },
+  "the-death-of-socrates": {
+    "width": 1600,
+    "height": 1051,
+    "variants": [
+      {
+        "file": "the-death-of-socrates-800.webp",
+        "width": 800
+      },
+      {
+        "file": "the-death-of-socrates-1600.webp",
+        "width": 1600
+      }
+    ]
+  },
+  "the-raft-of-the-medusa": {
+    "width": 1600,
+    "height": 1093,
+    "variants": [
+      {
+        "file": "the-raft-of-the-medusa-800.webp",
+        "width": 800
+      },
+      {
+        "file": "the-raft-of-the-medusa-1600.webp",
+        "width": 1600
+      }
+    ]
+  },
+  "dance-at-le-moulin-de-la-galette": {
+    "width": 1280,
+    "height": 951,
+    "variants": [
+      {
+        "file": "dance-at-le-moulin-de-la-galette-800.webp",
+        "width": 800
+      },
+      {
+        "file": "dance-at-le-moulin-de-la-galette-1600.webp",
+        "width": 1280
+      }
+    ]
+  },
+  "summertime": {
+    "width": 960,
+    "height": 1196,
+    "variants": [
+      {
+        "file": "summertime-800.webp",
+        "width": 642
+      },
+      {
+        "file": "summertime-1600.webp",
+        "width": 960
+      }
+    ]
+  },
+  "boulevard-des-capucines": {
+    "width": 960,
+    "height": 1293,
+    "variants": [
+      {
+        "file": "boulevard-des-capucines-800.webp",
+        "width": 594
+      },
+      {
+        "file": "boulevard-des-capucines-1600.webp",
+        "width": 960
+      }
+    ]
+  },
+  "the-gleaners": {
+    "width": 1280,
+    "height": 958,
+    "variants": [
+      {
+        "file": "the-gleaners-800.webp",
+        "width": 800
+      },
+      {
+        "file": "the-gleaners-1600.webp",
+        "width": 1280
+      }
+    ]
+  },
+  "wanderer-above-the-sea-of-fog": {
+    "width": 960,
+    "height": 1231,
+    "variants": [
+      {
+        "file": "wanderer-above-the-sea-of-fog-800.webp",
+        "width": 624
+      },
+      {
+        "file": "wanderer-above-the-sea-of-fog-1600.webp",
+        "width": 960
+      }
+    ]
+  },
+  "olympia": {
+    "width": 1600,
+    "height": 1083,
+    "variants": [
+      {
+        "file": "olympia-800.webp",
+        "width": 800
+      },
+      {
+        "file": "olympia-1600.webp",
+        "width": 1600
+      }
+    ]
+  },
+  "the-luncheon-on-the-grass": {
+    "width": 1280,
+    "height": 994,
+    "variants": [
+      {
+        "file": "the-luncheon-on-the-grass-800.webp",
+        "width": 800
+      },
+      {
+        "file": "the-luncheon-on-the-grass-1600.webp",
+        "width": 1280
+      }
+    ]
+  },
+  "the-third-class-carriage": {
+    "width": 1280,
+    "height": 926,
+    "variants": [
+      {
+        "file": "the-third-class-carriage-800.webp",
+        "width": 800
+      },
+      {
+        "file": "the-third-class-carriage-1600.webp",
+        "width": 1280
+      }
+    ]
+  },
+  "the-barricade": {
+    "width": 1181,
+    "height": 1600,
+    "variants": [
+      {
+        "file": "the-barricade-800.webp",
+        "width": 591
+      },
+      {
+        "file": "the-barricade-1600.webp",
+        "width": 1181
+      }
+    ]
+  },
+  "what-is-called-vagrancy": {
+    "width": 1280,
+    "height": 1029,
+    "variants": [
+      {
+        "file": "what-is-called-vagrancy-800.webp",
+        "width": 800
+      },
+      {
+        "file": "what-is-called-vagrancy-1600.webp",
+        "width": 1280
+      }
+    ]
+  },
+  "the-harvester": {
+    "width": 1222,
+    "height": 1600,
+    "variants": [
+      {
+        "file": "the-harvester-800.webp",
+        "width": 611
+      },
+      {
+        "file": "the-harvester-1600.webp",
+        "width": 1222
+      }
+    ]
+  },
+  "simon-chenard-as-a-sans-culotte": {
+    "width": 960,
+    "height": 1320,
+    "variants": [
+      {
+        "file": "simon-chenard-as-a-sans-culotte-800.webp",
+        "width": 582
+      },
+      {
+        "file": "simon-chenard-as-a-sans-culotte-1600.webp",
+        "width": 960
+      }
+    ]
+  },
+  "cornelia-pointing-to-her-children": {
+    "width": 1538,
+    "height": 1217,
+    "variants": [
+      {
+        "file": "cornelia-pointing-to-her-children-800.webp",
+        "width": 800
+      },
+      {
+        "file": "cornelia-pointing-to-her-children-1600.webp",
+        "width": 1538
+      }
+    ]
+  },
+  "monet-painting": {
+    "width": 1536,
+    "height": 1265,
+    "variants": [
+      {
+        "file": "monet-painting-800.webp",
+        "width": 800
+      },
+      {
+        "file": "monet-painting-1600.webp",
+        "width": 1536
+      }
+    ]
+  },
+  "the-childs-bath": {
+    "width": 960,
+    "height": 1465,
+    "variants": [
+      {
+        "file": "the-childs-bath-800.webp",
+        "width": 524
+      },
+      {
+        "file": "the-childs-bath-1600.webp",
+        "width": 960
+      }
+    ]
+  },
+  "regatta-at-argenteuil": {
+    "width": 1000,
+    "height": 643,
+    "variants": [
+      {
+        "file": "regatta-at-argenteuil-800.webp",
+        "width": 800
+      },
+      {
+        "file": "regatta-at-argenteuil-1600.webp",
+        "width": 1000
+      }
+    ]
+  },
+  "stack-of-wheat-snow-effect": {
+    "width": 843,
+    "height": 591,
+    "variants": [
+      {
+        "file": "stack-of-wheat-snow-effect-800.webp",
+        "width": 800
+      },
+      {
+        "file": "stack-of-wheat-snow-effect-1600.webp",
+        "width": 843
+      }
+    ]
+  },
+  "the-boating-party": {
+    "width": 1280,
+    "height": 982,
+    "variants": [
+      {
+        "file": "the-boating-party-800.webp",
+        "width": 800
+      },
+      {
+        "file": "the-boating-party-1600.webp",
+        "width": 1280
+      }
+    ]
+  },
+  "summers-day": {
+    "width": 1600,
+    "height": 978,
+    "variants": [
+      {
+        "file": "summers-day-800.webp",
+        "width": 800
+      },
+      {
+        "file": "summers-day-1600.webp",
+        "width": 1600
+      }
+    ]
+  },
+  "a-bar-at-the-folies-bergere": {
+    "width": 1280,
+    "height": 940,
+    "variants": [
+      {
+        "file": "a-bar-at-the-folies-bergere-800.webp",
+        "width": 800
+      },
+      {
+        "file": "a-bar-at-the-folies-bergere-1600.webp",
+        "width": 1280
+      }
+    ]
+  },
+  "the-nightmare": {
+    "width": 1280,
+    "height": 1025,
+    "variants": [
+      {
+        "file": "the-nightmare-800.webp",
+        "width": 800
+      },
+      {
+        "file": "the-nightmare-1600.webp",
+        "width": 1280
+      }
+    ]
+  }
+}

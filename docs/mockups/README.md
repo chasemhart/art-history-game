@@ -25,7 +25,7 @@ Image paths point at Chase's original files in `public/images/`. The prototypes 
 
 ## Known differences between the mockups and the spec
 
-Where they disagree, `PRD.md` and `DESIGN.md` win:
+Where they disagree, `DESIGN.md` wins:
 
 - The mockups show sample progress ("Painting 3 of 8") and sample scores; the real app computes these.
 - Movement accent colors and era lighting (`DESIGN.md` section 7) are not in the mockups yet.

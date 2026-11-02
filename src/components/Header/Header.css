@@ -1,0 +1,132 @@
+/* Header (DESIGN.md section 11). */
+
+/* A floating glass bar that stays in reach while the page scrolls. It floats
+   a little below the top edge so it reads as an object in the room rather
+   than part of the browser. */
+.site-header {
+  position: sticky;
+  top: var(--space-4);
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-5);
+  border-radius: var(--radius-panel);
+  transition:
+    transform var(--t-settle) var(--ease-arrive),
+    opacity var(--t-settle) var(--ease-arrive);
+}
+
+/* Scrolling down, the header slides up out of the way so it never covers
+   what you're reading; scrolling up brings it straight back. It stays put
+   whenever keyboard focus is inside it, so it can't hide from keyboard users. */
+.site-header.is-tucked:not(:focus-within) {
+  transform: translateY(calc(-100% - var(--space-5)));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.site-header__wordmark {
+  /* A full 44px tap target (it links home) without changing how it looks */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-display);
+  font-size: var(--size-wordmark);
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  line-height: 1.2;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.site-header__wordmark:hover {
+  color: var(--ink);
+}
+
+/* Mode tabs as a segmented control: the active mode is a solid ink pill */
+.site-header__tabs {
+  display: flex;
+  gap: var(--space-1);
+  font-family: var(--font-label);
+  font-size: var(--size-label);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.site-header__tab {
+  display: inline-flex;
+  align-items: center;
+  /* Tap targets at least 44px tall: a size a fingertip can hit reliably */
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  color: var(--muted);
+  transition:
+    background-color var(--t-quick) var(--ease-arrive),
+    color var(--t-quick) var(--ease-arrive);
+}
+
+.site-header__tab:hover {
+  background: var(--wash);
+  color: var(--ink);
+}
+
+.site-header__tab[aria-current='page'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.site-header__progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-right: var(--space-2);
+  font-family: var(--font-label);
+  font-size: var(--size-meta);
+  font-weight: 500;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Phones: wordmark and progress share the first row; the tabs move to a
+   second row and split the width evenly, so both stay easy to tap. */
+@media (max-width: 900px) {
+  .site-header {
+    top: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .site-header__wordmark {
+    padding-left: var(--space-1);
+  }
+
+  .site-header__tabs {
+    order: 3;
+    flex: 1 1 100%;
+  }
+
+  .site-header__tab {
+    flex: 1;
+    justify-content: center;
+    padding: 0 var(--space-2);
+    font-size: var(--size-tag);
+    letter-spacing: 1px;
+  }
+
+  .site-header__progress {
+    padding-right: var(--space-1);
+    font-size: var(--size-label);
+  }
+}
+
+/* Phones: the ticks give way so the words fit beside the wordmark; "Painting 3 of 8" says the same thing */
+@media (max-width: 480px) {
+  .site-header__progress .progress-ticks {
+    display: none;
+  }
+}

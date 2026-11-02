@@ -1,0 +1,557 @@
+/* All at once (DESIGN.md sections 5, 7, 8, and 9). Nothing is drawn on a painting. */
+
+.group-sort {
+  /* The height of each work's frame on the wall: every work gets the same
+     frame, so the spacing is even whatever the painting's shape */
+  --hang-frame: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.group-sort__intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-height: 34px;
+}
+
+/* Gold path: the instruction first, with the diamond beside it */
+.group-sort__prompt,
+.group-sort__verdict {
+  font-family: var(--font-display);
+  font-size: var(--size-verdict);
+  font-weight: 600;
+  animation: rise var(--t-settle) var(--ease-arrive) both;
+}
+
+.group-sort__hint {
+  font-family: var(--font-label);
+  font-size: var(--size-meta);
+  color: var(--muted);
+}
+
+.group-sort__hint cite {
+  font-family: var(--font-display);
+  font-size: 17px;
+  color: var(--ink);
+}
+
+.group-sort__hint-zoom {
+  min-height: 44px;
+  padding: 0 var(--space-1);
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 4px;
+  cursor: zoom-in;
+}
+
+/* ---------- The wall ---------- */
+
+/* An even grid: four across, two rows. Works hang centered in equal frames,
+   the way a gallery hangs paintings on a common center line at eye level. */
+.group-wall {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-8) var(--space-6);
+  padding: var(--space-8) var(--space-6) var(--space-6);
+  border-radius: var(--radius-panel);
+  /* A faint ink wash marks the wall as its own surface, a step behind the rooms */
+  background: var(--wash);
+}
+
+/* With a hung work lifted, the wall is a place to return it to */
+.group-wall.is-open {
+  outline: 1px dashed var(--gold);
+  outline-offset: -6px;
+}
+
+.group-wall__done {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  font-family: var(--font-label);
+  font-size: var(--size-meta);
+  color: var(--muted);
+  text-align: center;
+}
+
+.group-wall__return {
+  grid-column: 1 / -1;
+}
+
+.group-work {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  margin: 0;
+  animation: rise var(--t-settle) var(--ease-arrive) both;
+}
+
+/* The equal frame: the painting is centered in it both ways */
+.group-work__frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--hang-frame);
+}
+
+/* The button hugs the painting, so its shadow and the gold corners sit on
+   the painting's own edges, not on the empty frame around it */
+.group-work__button {
+  position: relative;
+  display: block;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: grab;
+  border-radius: var(--radius-art);
+  /* Touch: no double-tap zoom, no text selection, and no "save image" menu on
+     a long press, which is how a drag starts on a phone */
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  /* Hung: each work casts its own shadow off the wall */
+  box-shadow: var(--shadow-hung);
+  transition:
+    transform var(--t-settle) var(--ease-arrive),
+    box-shadow var(--t-settle) var(--ease-arrive);
+}
+
+/* Once checked, works no longer move; selecting one opens it large */
+.group-room.is-lit .group-work__button {
+  cursor: zoom-in;
+}
+
+.group-work__image {
+  display: block;
+  -webkit-user-drag: none;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: var(--hang-frame);
+  border-radius: var(--radius-art);
+}
+
+/* Gold path: a lifted work rises off the wall and gains the gold corner
+   marks, outside the image and never on it. It's the one thing to place next. */
+.group-work.is-selected .group-work__button {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hung-lifted);
+}
+
+.group-work__button::before {
+  --mark: linear-gradient(var(--gold), var(--gold));
+  content: '';
+  position: absolute;
+  inset: -10px;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    var(--mark) left top / 16px 1px no-repeat,
+    var(--mark) left top / 1px 16px no-repeat,
+    var(--mark) right top / 16px 1px no-repeat,
+    var(--mark) right top / 1px 16px no-repeat,
+    var(--mark) left bottom / 16px 1px no-repeat,
+    var(--mark) left bottom / 1px 16px no-repeat,
+    var(--mark) right bottom / 16px 1px no-repeat,
+    var(--mark) right bottom / 1px 16px no-repeat;
+  transition:
+    opacity var(--t-quick) var(--ease-arrive),
+    inset var(--t-settle) var(--ease-arrive);
+}
+
+.group-work.is-selected .group-work__button::before {
+  opacity: 1;
+  inset: -7px;
+}
+
+/* While a work is dragged, a faint ghost keeps its place on the wall */
+.group-work.is-dragging .group-work__button {
+  opacity: 0.25;
+  box-shadow: none;
+}
+
+/* The work in hand: lifted off the wall, tilted a touch, with the deepest
+   shadow in the app, the way a canvas looks when someone carries it */
+.group-drag {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-art);
+  box-shadow: var(--shadow-zoom);
+  transform: rotate(-1.5deg) scale(1.04);
+  cursor: grabbing;
+  overflow: hidden;
+}
+
+.group-drag img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Touch screens: a finger covers what's under it, so the work in hand
+   shrinks and rides just above the fingertip, leaving the room you're
+   aiming for in plain view */
+@media (hover: none) {
+  .group-drag {
+    transform: translateY(-75%) scale(0.5) rotate(-2deg);
+  }
+}
+
+@media (hover: hover) {
+  .group-work__button:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hung-lifted);
+  }
+}
+
+/* The label sits centered under its painting, like a card under a hung work */
+.group-work__caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  text-align: center;
+}
+
+/* Titles of works are italic, here as on every label */
+.group-work__title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.2;
+}
+
+.group-work__artist {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-label);
+  font-size: var(--size-tag);
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* The magnifier sits beside the artist, a full-size tap target that looks small */
+.group-work__zoom {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: -14px -14px -14px -6px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--muted);
+  cursor: zoom-in;
+}
+
+.group-work__zoom:hover {
+  color: var(--ink);
+}
+
+/* ---------- The rooms ---------- */
+
+.group-rooms {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.group-room {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  border-radius: var(--radius-panel);
+  transition:
+    transform var(--t-quick) var(--ease-arrive),
+    box-shadow var(--t-quick) var(--ease-arrive);
+}
+
+/* Era light: after the check, each room is lit with its movement's light,
+   falling from above as in the single-painting view (DESIGN.md 5.3) */
+.group-room::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, var(--era-light, transparent), transparent 75%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-ambient) ease;
+}
+
+.group-room.is-lit::before {
+  opacity: 1;
+}
+
+/* With a work lifted or in hand, every room invites it: a gold hairline at
+   the top. The room under the pointer rises to meet it, and the gold deepens. */
+.group-room.is-open {
+  box-shadow: var(--shadow-raised), inset 0 2px 0 var(--gold);
+}
+
+.group-room.is-over {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-choice-lifted), inset 0 0 0 1px var(--gold), inset 0 3px 0 var(--gold);
+}
+
+.group-wall.is-over {
+  outline-style: solid;
+}
+
+.group-room__placard {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: 52px;
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-bottom: 1px solid var(--hairline);
+  background: none;
+  color: var(--ink);
+  text-align: left;
+  cursor: default;
+}
+
+.group-room.is-open .group-room__placard,
+.group-room.is-open .group-room__works {
+  cursor: pointer;
+}
+
+/* The room's name, set like a museum's wayfinding sign. After the check it
+   takes the movement's ink, and the line beneath takes its accent (DESIGN.md 7). */
+.group-room__name {
+  font-family: var(--font-label);
+  font-size: var(--size-label);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--movement-ink, var(--ink));
+  transition: color var(--t-ambient) ease;
+}
+
+.group-room.is-lit .group-room__placard {
+  border-bottom-color: var(--movement-accent);
+}
+
+.group-room__count {
+  font-family: var(--font-label);
+  font-size: var(--size-tag);
+  font-weight: 600;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.group-room__works {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: var(--space-4) var(--space-3);
+  padding: var(--space-4);
+}
+
+.group-room__empty {
+  margin: auto;
+  font-family: var(--font-label);
+  font-size: var(--size-tag);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* A hung work in a room: a small square thumbnail with its title beneath */
+.group-work.is-compact {
+  width: calc(50% - var(--space-3) / 2);
+  gap: var(--space-2);
+  animation-duration: var(--t-quick);
+}
+
+.group-work.is-compact .group-work__frame {
+  height: auto;
+}
+
+.group-work.is-compact .group-work__button {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  box-shadow: var(--shadow-choice-lifted);
+}
+
+.group-work.is-compact .group-work__image {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: cover;
+}
+
+.group-work.is-compact .group-work__caption {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.group-work.is-compact .group-work__title {
+  font-size: 14px;
+}
+
+/* After the check, a work in the wrong room: the dashed bronze outline used
+   for every wrong answer, plus the words saying where it belongs */
+.group-work.is-misplaced .group-work__button {
+  outline: 1px dashed var(--bronze);
+  outline-offset: 3px;
+}
+
+/* A correct work after the check: a quiet word and a check mark, so the
+   result is never told by the absence of a mark alone */
+.group-work__in-place {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-label);
+  font-size: var(--size-tag);
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.group-work__belongs {
+  font-family: var(--font-label);
+  font-size: var(--size-tag);
+  font-weight: 600;
+  color: var(--bronze);
+}
+
+.group-sort__check,
+.group-sort__again {
+  display: flex;
+  justify-content: center;
+  animation: rise var(--t-settle) var(--ease-arrive) both;
+}
+
+.group-sort__check .next-button,
+.group-sort__again .next-button {
+  width: auto;
+  min-width: min(100%, 320px);
+}
+
+/* ---------- The tray (phones) ---------- */
+
+/* Hidden on wide screens, where the rooms are already in view */
+.group-tray {
+  display: none;
+}
+
+@media (max-width: 960px) {
+  .group-rooms {
+    grid-template-columns: 1fr;
+  }
+
+  .group-room {
+    min-height: 0;
+  }
+
+  .group-room__works {
+    min-height: 64px;
+  }
+
+  .group-work.is-compact {
+    width: 88px;
+  }
+
+  /* With a work lifted, the five rooms rise into reach at the bottom of the
+     screen, clear of the phone's home bar */
+  .group-tray {
+    position: fixed;
+    left: var(--space-2);
+    right: var(--space-2);
+    bottom: calc(var(--space-2) + env(safe-area-inset-bottom, 0px));
+    z-index: 10;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--space-1);
+    padding: var(--space-2);
+    border-radius: var(--radius-panel);
+    animation: rise var(--t-settle) var(--ease-arrive) both;
+  }
+
+  .group-tray__room.is-over {
+    border-color: var(--gold);
+    background: var(--paper);
+    box-shadow: inset 0 0 0 1px var(--gold);
+  }
+
+  .group-tray__room {
+    min-height: 52px;
+    padding: 0 2px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-control);
+    background: var(--choice-fill-hover);
+    color: var(--ink);
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+  }
+
+  /* Keep the end of the page clear of the tray */
+  .group-sort {
+    padding-bottom: 88px;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Two across on phones: still an even grid, four rows of two */
+  .group-sort {
+    --hang-frame: 120px;
+    padding-bottom: 150px;
+  }
+
+  .group-wall {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6) var(--space-4);
+    padding: var(--space-6) var(--space-4) var(--space-4);
+  }
+
+  .group-work__title {
+    font-size: 15px;
+  }
+
+  /* The lifted work's "View it larger" takes over from the magnifiers here */
+  .group-work__zoom {
+    display: none;
+  }
+
+  /* Three rooms, then two: five in one row would clip the longer names */
+  .group-tray {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .group-tray__room {
+    grid-column: span 2;
+    font-size: var(--size-label);
+  }
+
+  .group-tray__room:nth-child(4) {
+    grid-column: 2 / span 2;
+  }
+}

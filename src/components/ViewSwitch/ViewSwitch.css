@@ -1,0 +1,59 @@
+/* View switch (DESIGN.md sections 6, 10, and 11). */
+
+/* Two equal halves, so the pill can slide exactly one half to the side */
+.view-switch {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-self: center;
+  width: min(100%, 360px);
+  padding: var(--space-1);
+  border-radius: var(--radius-pill);
+}
+
+/* The chosen option sits on a solid ink pill, like the active header tab.
+   It slides rather than jumping: a change of view, not a change of place. */
+.view-switch__pill {
+  position: absolute;
+  inset: var(--space-1) auto var(--space-1) var(--space-1);
+  width: calc(50% - var(--space-1));
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  transition: transform var(--t-settle) var(--ease-arrive);
+}
+
+.view-switch__option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* A full-size tap target */
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-label);
+  font-size: var(--size-label);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--muted);
+  transition: color var(--t-settle) var(--ease-arrive);
+}
+
+.view-switch__option:hover {
+  color: var(--ink);
+}
+
+.view-switch__option[aria-current='page'] {
+  color: var(--paper);
+}
+
+@media (max-width: 480px) {
+  .view-switch__option {
+    padding: 0 var(--space-2);
+    font-size: var(--size-tag);
+    letter-spacing: 1px;
+  }
+}

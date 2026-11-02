@@ -1,0 +1,194 @@
+/* Artwork stage (DESIGN.md sections 5, 8, and 9). Never draws on the painting. */
+
+.artwork-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Ambient glow: fixed behind the whole page, so the painting's palette tints
+   every surface and the glass has color to refract (DESIGN.md section 5.1) */
+.artwork-stage__glow {
+  position: fixed;
+  inset: -10%;
+  z-index: -1;
+  width: 120%;
+  height: 120%;
+  max-width: none;
+  object-fit: cover;
+  filter: blur(90px) saturate(1.15);
+  opacity: var(--glow-opacity);
+  pointer-events: none;
+  animation: glow-in var(--t-ambient) ease both;
+}
+
+@keyframes glow-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: var(--glow-opacity);
+  }
+}
+
+/* Gallery spotlight: light from above tells the eye "this is the object on
+   display" before any text is read. One of the three gradients DESIGN.md allows. */
+.artwork-stage__spot,
+.artwork-stage__era {
+  position: absolute;
+  inset: -30px 8% auto;
+  height: 80%;
+  pointer-events: none;
+}
+
+.artwork-stage__spot {
+  background: radial-gradient(ellipse at 50% 0%, rgba(255, 250, 236, 0.75), rgba(255, 250, 236, 0) 70%);
+}
+
+/* Era light: after the answer, the light shifts slowly toward the movement's
+   own light (candlelit Rococo, Romantic dusk, Impressionist open air). It
+   waits at zero until then, because a light that matched the movement would
+   give the answer away (DESIGN.md section 5.3). */
+.artwork-stage__era {
+  background: radial-gradient(ellipse at 50% 0%, var(--era-light, transparent), transparent 70%);
+  opacity: 0;
+  transition: opacity var(--t-ambient) ease;
+}
+
+.artwork-stage.is-lit .artwork-stage__era {
+  opacity: 1;
+}
+
+/* A fixed-height wall on wide screens, so the label and buttons beside it
+   don't move when a tall portrait follows a wide landscape */
+.artwork-stage__hang {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 660px;
+}
+
+.artwork-stage__button {
+  position: relative;
+  display: flex;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  /* Sharp art, soft furniture: a canvas edge, barely softened */
+  border-radius: var(--radius-art);
+  /* Hung: a framed work hangs off the wall, so its shadow is deep and directional */
+  box-shadow: var(--shadow-hung);
+  transition:
+    transform 500ms var(--ease-arrive),
+    box-shadow 500ms var(--ease-arrive);
+  /* Like eyes focusing: in from a slight blur and a hair smaller (DESIGN.md 10.2) */
+  animation: artwork-arrive 800ms var(--ease-arrive) both;
+}
+
+/* Hover lifts the painting off the wall, an invitation to look closer */
+/* Hover effects only on devices that can hover: on a touch screen a tap
+   leaves them stuck on, so a button would stay lifted after you let go */
+@media (hover: hover) {
+  .artwork-stage__button:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hung-lifted);
+  }
+}
+
+/* Gold path, step 1: four fine gold corner marks draw in around the painting,
+   like the corners of a mat. They sit outside the image, never on it, and
+   open slightly on hover (DESIGN.md section 8.1). Drawn with gradients, one
+   of the three uses DESIGN.md allows. */
+.artwork-stage__button::before {
+  --mark: linear-gradient(var(--gold), var(--gold));
+  content: '';
+  position: absolute;
+  inset: -16px;
+  pointer-events: none;
+  background:
+    var(--mark) left top / 22px 1px no-repeat,
+    var(--mark) left top / 1px 22px no-repeat,
+    var(--mark) right top / 22px 1px no-repeat,
+    var(--mark) right top / 1px 22px no-repeat,
+    var(--mark) left bottom / 22px 1px no-repeat,
+    var(--mark) left bottom / 1px 22px no-repeat,
+    var(--mark) right bottom / 22px 1px no-repeat,
+    var(--mark) right bottom / 1px 22px no-repeat;
+  animation: corners-in 1s 350ms var(--ease-arrive) both;
+  transition: inset 500ms var(--ease-arrive);
+}
+
+@media (hover: hover) {
+  .artwork-stage__button:hover::before {
+    inset: -22px;
+  }
+}
+
+.artwork-stage__painting {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 640px;
+  object-fit: contain;
+  border-radius: var(--radius-art);
+}
+
+.artwork-stage__hint {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-label);
+  font-size: var(--size-label);
+  color: var(--muted);
+}
+
+@keyframes artwork-arrive {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes corners-in {
+  from {
+    opacity: 0;
+    inset: -28px;
+  }
+  to {
+    opacity: 1;
+    inset: -16px;
+  }
+}
+
+/* Phones and tablets stacked in one column: the painting sets its own height,
+   capped so the label still comes into view below it */
+@media (max-width: 960px) {
+  .artwork-stage__hang {
+    height: auto;
+    padding: var(--space-6) var(--space-5);
+  }
+
+  .artwork-stage__painting {
+    max-height: 58vh;
+  }
+
+  /* Blur is the most expensive effect on phones: reduce it first, and never
+     touch text contrast to save frames */
+  .artwork-stage__glow {
+    filter: blur(60px) saturate(1.15);
+  }
+}

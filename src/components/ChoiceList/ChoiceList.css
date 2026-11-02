@@ -1,0 +1,189 @@
+/* Choice list (DESIGN.md sections 8.1, 10.2, and 11). */
+
+.choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.choice {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 52px;
+  padding: var(--space-3) 18px;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--hairline);
+  /* Lighter glass than the panels, so the buttons sit in the same light */
+  background: var(--choice-fill);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--ink);
+  font-family: var(--font-read);
+  font-size: var(--size-choice);
+  text-align: left;
+  cursor: pointer;
+  box-shadow: var(--shadow-choice);
+  transition:
+    transform var(--t-quick) var(--ease-arrive),
+    box-shadow var(--t-quick) var(--ease-arrive),
+    border-color var(--t-quick) var(--ease-arrive),
+    color 450ms var(--ease-arrive),
+    background-color var(--t-quick) var(--ease-arrive);
+  animation: rise var(--t-settle) var(--ease-arrive) both;
+}
+
+/* The ink that fills the right answer, waiting at zero width */
+.choice::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t-settle) var(--ease-draw);
+}
+
+/* Gold path, step 4: a gold hairline draws under the answer you're considering */
+.choice::after {
+  content: '';
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 0;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 450ms var(--ease-draw);
+}
+
+/* Keep the words above the ink fill */
+.choice > * {
+  position: relative;
+}
+
+.choice__label {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.choice__key {
+  font-family: var(--font-label);
+  font-size: var(--size-tag);
+  font-weight: 600;
+  color: var(--muted);
+  min-width: 1ch;
+}
+
+.choice__mark {
+  font-family: var(--font-label);
+  font-size: var(--size-tag);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.choice__chevron {
+  opacity: 0;
+  transform: translateX(-6px);
+  transition:
+    opacity var(--t-quick),
+    transform var(--t-quick);
+}
+
+/* Waiting: hover lifts the button toward the hand */
+/* Hover effects only on devices that can hover: on a touch screen a tap
+   leaves them stuck on, so a button would stay lifted after you let go */
+@media (hover: hover) {
+  .choice.is-idle:hover {
+    transform: translateY(-2px);
+    border-color: var(--hairline-strong);
+    background: var(--choice-fill-hover);
+    box-shadow: var(--shadow-choice-lifted);
+  }
+
+  .choice.is-idle:hover::after {
+    transform: scaleX(1);
+  }
+
+  .choice.is-idle:hover .choice__chevron {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.choice.is-idle:active {
+  transform: translateY(0) scale(0.985);
+}
+
+/* After answering, nothing invites another press */
+.choice[aria-disabled='true'] {
+  cursor: default;
+}
+
+/* The answer: ink fills it from left to right, like a stroke being drawn */
+.choice.is-answer {
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.choice.is-answer::before {
+  transform: scaleX(1);
+}
+
+.choice.is-answer .choice__key {
+  color: var(--gold-on-ink);
+}
+
+/* A wrong pick: dashed bronze and one small shake. Readable, never alarming */
+.choice.is-wrong {
+  color: var(--bronze);
+  border: 1px dashed var(--bronze);
+  background: var(--choice-fill-wrong);
+  animation: choice-shake 450ms ease both;
+}
+
+.choice.is-wrong .choice__key {
+  color: var(--bronze);
+}
+
+/* Everything else fades back so the answer stands forward */
+.choice.is-dim {
+  color: var(--muted-2);
+  background: var(--choice-fill-dim);
+  border-color: var(--hairline-faint);
+  box-shadow: none;
+}
+
+@keyframes choice-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-5px);
+  }
+  40% {
+    transform: translateX(5px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+/* Touch screens have no keyboard shortcuts, so the numbers would only add noise */
+@media (hover: none) {
+  .choice__key {
+    display: none;
+  }
+}

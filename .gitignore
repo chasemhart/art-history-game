@@ -23,5 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# Claude Code session brief: kept on each machine, not committed
+# Planning docs kept on each machine, not committed: the Claude Code session
+# brief and Owen's product plan
 CLAUDE.md
+docs/PRD.md
