@@ -1,0 +1,29 @@
+/* Progress ticks (DESIGN.md section 11). */
+
+.progress-ticks {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.progress-tick {
+  display: block;
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--tick-future);
+  transition:
+    width var(--t-settle) var(--ease-arrive),
+    background-color var(--t-settle) var(--ease-arrive);
+}
+
+/* Done: ink, the same weight as the text it sits beside */
+.progress-tick.is-done {
+  background: var(--ink);
+}
+
+/* Gold path: the current tick is the one gold, wider mark, "you are here" */
+.progress-tick.is-current {
+  width: 26px;
+  background: var(--gold);
+}

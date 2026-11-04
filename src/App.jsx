@@ -1,265 +1,97 @@
-import { useState } from "react";
-import paintings from "./paintings";
-function getRandomPaintings(allPaintings, count) {
-  const shuffled = [...allPaintings].sort(
-    () => Math.random() - 0.5
-  );
+// The frame of the app: the header, then whichever screen the address asks for.
+//
+// Used by: main.jsx, which puts it on the page.
+// Why it exists as its own file: it is the one place that decides which
+// screen is showing and holds the state screens share. Each study mode has
+// its own round (switching tabs mid-round never mixes them up), and the
+// header and review screens read from whichever round belongs to the screen.
 
-  return shuffled.slice(0, count);
+import { useEffect } from 'react'
+import Header from './components/Header/Header.jsx'
+import ViewSwitch from './components/ViewSwitch/ViewSwitch.jsx'
+import paintings from './data/paintings.js'
+import { isCorrectMovement, isFullyIdentified, useRound } from './lib/round.js'
+import { useGroupSort } from './lib/groupSort.js'
+import { modeOf, useHashRoute } from './lib/useHashRoute.js'
+import IdentifyScreen from './screens/IdentifyScreen.jsx'
+import PlaceholderScreen from './screens/PlaceholderScreen.jsx'
+import ReviewScreen from './screens/ReviewScreen.jsx'
+import GroupSortScreen from './screens/GroupSortScreen.jsx'
+import SortScreen from './screens/SortScreen.jsx'
+import './App.css'
+
+const PAGE_TITLES = {
+  sort: 'Sort by movement',
+  'sort/all': 'All at once',
+  identify: 'Identify',
+  review: 'Your round',
+  'identify/review': 'Your round',
 }
-function App() {
 
-  const [remaining, setRemaining] = useState(
-  getRandomPaintings(paintings, 8)
-);
-  const [dragged, setDragged] = useState(null);
-  const [score, setScore] = useState(0);
-const [message, setMessage] = useState(
-  "Sort the paintings into the correct movement."
-);
-const [results, setResults] = useState([]);
-const [explanation, setExplanation] =
-  useState("");
-const [selectedImage, setSelectedImage] =
-  useState(null);
-  const categories = ["Rococo", "Neo-Classical", "Romantic", "Realist", "Impressionist",];
+export default function App() {
+  const route = useHashRoute()
+  const sortRound = useRound(paintings, isCorrectMovement)
+  const identifyRound = useRound(paintings, isFullyIdentified)
+  // All at once keeps its own state, so switching views never loses a set
+  const group = useGroupSort(paintings)
+  const mode = modeOf(route)
+  const round = mode === 'identify' ? identifyRound : sortRound
 
-  function handleDrop(category) {
-  if (!dragged) return;
+  // Name the browser tab after the screen, which also tells screen reader
+  // users where they have landed
+  useEffect(() => {
+    document.title = `${PAGE_TITLES[route]} · Art History Study`
+    // A new screen starts at the top, as a new page would
+    window.scrollTo(0, 0)
+  }, [route])
 
-  if (dragged.movement === category) {
-    setMessage(`✅ Correct! ${dragged.title}`);
-    setScore(score + 1);
-  } else {
-    setMessage(
-      `❌ ${dragged.title} belongs to ${dragged.movement}`
-    );
+  // Starting a new round always returns to that mode's first screen
+  function startOver(deal) {
+    deal()
+    window.location.hash = `#/${mode}`
   }
-setResults((prev) => [
-  ...prev,
-  {
-    title: dragged.title,
-    correct: dragged.movement === category,
-    movement: dragged.movement,
-    selected: category,
-    explanation: dragged.explanation,
-  },
-]);
 
-  setExplanation(dragged.explanation);
+  const isReview = route === 'review' || route === 'identify/review'
 
-  setRemaining(
-    remaining.filter(
-      (painting) => painting.title !== dragged.title
-    )
-  );
-}
-if (remaining.length === 0) {
+  // What the header's progress counts: paintings seen, or works hung
+  const progress = isReview
+    ? null
+    : route === 'sort/all'
+      ? { label: `${group.hung} of ${group.total} hung`, position: group.hung + 1, total: group.total }
+      : { label: `Painting ${round.position} of ${round.total}`, position: round.position, total: round.total }
+
   return (
-    <div
-      style={{
-        padding: "30px",
-        fontFamily: "Georgia, serif",
-      }}
-    >
-      <h1>🎉 Game Complete!</h1>
+    <div className="app">
+      <Header route={route} progress={progress} />
 
-      <h2>
-        Final Score: {score} / 8
-      </h2>
+      {/* The Sort tab's two views share it: one painting at a time, or the wall */}
+      {(route === 'sort' || route === 'sort/all') && <ViewSwitch route={route} />}
 
-      <hr />
+      {route === 'sort' && <SortScreen round={sortRound} onFinish={() => (window.location.hash = '#/review')} />}
 
-      <h2>Review</h2>
+      {route === 'sort/all' && <GroupSortScreen group={group} />}
 
-      {results.map((result, index) => (
-        <div
-          key={index}
-          style={{
-            border: "1px solid #ddd",
-            padding: "15px",
-            marginBottom: "15px",
-            borderRadius: "8px",
-            backgroundColor: result.correct
-              ? "#eef9ee"
-              : "#fff0f0",
-          }}
-        >
-          <h3>{result.title}</h3>
-
-          <p>
-            {result.correct
-              ? "✅ Correct"
-              : "❌ Incorrect"}
-          </p>
- <p>
-            <strong>Your Answer:</strong>{" "}
-            {result.selected}
-          </p>
-
-          <p></p>
-          <p>
-            <strong>Movement:</strong>{" "}
-            {result.movement}
-          </p>
-
-          <p>{result.explanation}</p>
-        </div>
-      ))}
-
-      <button
-        onClick={() => window.location.reload()}
-        style={{
-          padding: "10px 20px",
-          marginTop: "20px",
-        }}
-      >
-        Play Again
-      </button>
-    </div>
-  );
-}
-  return (
-    <div
-  style={{
-    padding: "30px",
-    backgroundColor: "#f8f6f2",
-    minHeight: "100vh",
-    fontFamily: "Georgia, serif",
-  }}
->
-      <h1>Art Movement Sorting Game</h1>
-
-      <h2>Score: {score}</h2>
-
-      <p>{message}</p>
-<p
-  style={{
-    backgroundColor: "#f5f5f5",
-    padding: "10px",
-    borderRadius: "8px",
-    maxWidth: "800px",
-  }}
->
-  {explanation}
-</p>
-      <div
-    
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, minmax(180px, 1fr))",
-          gap: "20px",
-          marginBottom: "30px",
-        }}
-      >
-        {remaining.map((painting) => (
-          <div
-            key={painting.title}
-            draggable
-            onDragStart={() => setDragged(painting)}
-            style={{
-              border: "1px solid black",
-              padding: "10px",
-              backgroundColor: "#f5f5f5",
-              cursor: "grab",
-            }}
-          >
-            <img
-              src={painting.image}
-              alt={painting.title}
-              onClick={() => setSelectedImage(painting)}
-              style={{
-                width: "100%",
-                height: "180px",
-                objectFit: "cover",
-                cursor: "pointer",
-              }}
-            />
-            <p style={{ marginBottom: 0 }}>{painting.title}</p>
-          </div>
-        ))}
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(5, minmax(180px, 1fr))",
-          gap: "20px",
-          padding: "10px",
-          width: "320px",
-          borderRadius: "12px",
-          cursor: "grab",
-        }}
-      >
-        {categories.map((category) => (
-          <div
-            key={category}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={() => handleDrop(category)}
-            style={{
-              border: "3px dashed #888",
-              minHeight: "180px",
-              padding: "20px",
-              textAlign: "center",
-              borderRadius: "12px",
-              backgroundColor: "#fafafa",
-              fontWeight: "bold",
-            }}
-          >
-            {category}
-          </div>
-        ))}
-      </div>
-
-      {selectedImage && (
-        <div
-          onClick={() => setSelectedImage(null)}
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0,0,0,.85)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: "white",
-              padding: "20px",
-              borderRadius: "10px",
-              maxWidth: "90%",
-              maxHeight: "90%",
-            }}
-          >
-            <h2>{selectedImage.title}</h2>
-            <img
-              src={selectedImage.image}
-              alt={selectedImage.title}
-              style={{
-                maxWidth: "100%",
-                maxHeight: "70vh",
-                objectFit: "contain",
-              }}
-            />
-            <button
-              onClick={() => setSelectedImage(null)}
-              style={{
-                marginTop: "10px",
-              }}
-            >
-              Close
-            </button>
-          </div>
-        </div>
+      {route === 'identify' && (
+        // key: each painting gets a fresh Identify screen, so the fields and
+        // grades from the last painting can never carry over
+        <IdentifyScreen
+          key={identifyRound.current.id}
+          round={identifyRound}
+          onFinish={() => (window.location.hash = '#/identify/review')}
+        />
       )}
-    </div>
-  );
-}
 
-export default App;
+      {isReview &&
+        (round.isFinished ? (
+          <ReviewScreen
+            mode={mode}
+            results={round.results}
+            onStudyAnother={() => startOver(round.dealAgain)}
+            onReviewMissed={() => startOver(round.dealMissed)}
+          />
+        ) : (
+          <PlaceholderScreen title="Your round">Finish a round to review it here.</PlaceholderScreen>
+        ))}
+    </div>
+  )
+}

@@ -1,0 +1,94 @@
+/* Wall label (DESIGN.md sections 4, 6, 7, and 8). */
+
+.wall-label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-7);
+  border-radius: var(--radius-panel);
+  animation: rise var(--t-settle) var(--ease-arrive) both;
+}
+
+/* Titles of works are italic: the convention in museum labels and art history writing */
+.wall-label__title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--size-title);
+  line-height: 1.08;
+}
+
+/* Gold path, step 2: a short gold line draws under the title, leading the eye
+   from the painting to the words (DESIGN.md section 8.1). After the answer
+   it redraws in the movement's own accent color (section 7). */
+.wall-label__rule {
+  display: block;
+  width: 44px;
+  height: 1px;
+  margin: var(--space-1) 0 2px;
+  background: var(--movement-accent, var(--gold));
+  transform-origin: left;
+  transition: background-color var(--t-ambient) var(--ease-arrive);
+  animation: draw var(--t-draw) 450ms var(--ease-draw) both;
+}
+
+.wall-label__artist {
+  font-family: var(--font-label);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.wall-label__meta {
+  font-family: var(--font-label);
+  font-size: var(--size-meta);
+  font-weight: 500;
+  color: var(--muted);
+}
+
+/* The label opens after the answer: a hairline, then the movement, then the text */
+.wall-label__reveal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--hairline);
+  animation: rise var(--t-settle) var(--ease-arrive) both;
+}
+
+/* The movement's name in its own text-safe ink (DESIGN.md section 7) */
+.wall-label__movement {
+  font-family: var(--font-label);
+  font-size: var(--size-tag);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--movement-ink, var(--bronze));
+}
+
+.wall-label__description {
+  font-size: var(--size-body);
+  line-height: var(--leading-body);
+}
+
+/* Drop capital: a nod to illuminated manuscripts, the oldest tradition of art
+   and text sharing a page, and a clear "begin reading here" */
+.wall-label__description::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 60px;
+  line-height: 0.78;
+  padding: 6px var(--space-2) 0 0;
+  color: var(--bronze);
+}
+
+@media (max-width: 600px) {
+  .wall-label {
+    padding: var(--space-5);
+  }
+
+  .wall-label__description::first-letter {
+    font-size: 52px;
+  }
+}

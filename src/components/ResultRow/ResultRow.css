@@ -1,0 +1,49 @@
+/* Result row (DESIGN.md sections 8.2 and 11). */
+
+.result-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-3);
+  border-bottom: 1px solid var(--hairline);
+  animation: rise var(--t-settle) var(--ease-arrive) both;
+}
+
+.result-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.result-row__label {
+  font-family: var(--font-label);
+  font-size: var(--size-tag);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.result-row__typed {
+  font-size: 16px;
+  /* A long typed title wraps instead of pushing the badge off the row */
+  overflow-wrap: anywhere;
+}
+
+.result-row__note {
+  font-family: var(--font-label);
+  font-size: var(--size-label);
+  font-weight: 500;
+}
+
+/* A teaching note on a right or nearly right answer is the accent to read */
+.result-row__note.is-correct,
+.result-row__note.is-close {
+  color: var(--bronze);
+}
+
+.result-row__note.is-not-quite {
+  color: var(--muted);
+}

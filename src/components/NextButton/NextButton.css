@@ -1,0 +1,74 @@
+/* Next button (DESIGN.md sections 8 and 11). */
+
+.next-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 54px;
+  padding: 0 var(--space-6);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-label);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  /* One line always: when space runs out, the button moves to its own row
+     rather than breaking its words */
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: var(--shadow-button);
+  transition:
+    transform var(--t-quick) var(--ease-arrive),
+    box-shadow var(--t-quick) var(--ease-arrive),
+    background-color var(--t-quick) var(--ease-arrive);
+}
+
+/* Gold path: once the student is ready to move on, gold appears only here */
+.next-button svg {
+  color: var(--gold-on-ink);
+  transition: transform 300ms var(--ease-arrive);
+}
+
+/* A gold underline draws in on hover, like a hand underlining the next step */
+.next-button::after {
+  content: '';
+  position: absolute;
+  left: var(--space-6);
+  right: var(--space-6);
+  bottom: 11px;
+  height: 1px;
+  background: var(--gold-on-ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 450ms var(--ease-draw);
+}
+
+/* Hover lifts the button 2px: it rises to meet the hand */
+/* Hover effects only on devices that can hover: on a touch screen a tap
+   leaves them stuck on, so a button would stay lifted after you let go */
+@media (hover: hover) {
+  .next-button:hover {
+    transform: translateY(-2px);
+    background: var(--ink-hover);
+    box-shadow: var(--shadow-button-lifted);
+  }
+
+  .next-button:hover svg {
+    transform: translateX(4px);
+  }
+
+  .next-button:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Press settles it slightly, like a physical button */
+.next-button:active {
+  transform: scale(0.985);
+}

@@ -1,0 +1,151 @@
+/*
+  Design tokens: every color, font, size, and timing in the app, named once.
+
+  Used by: every other stylesheet. Components write `var(--ink)`, never a raw
+  color like `#22201C`.
+  Why it exists as its own file: this is the design system in code. Changing a
+  value here changes it everywhere, so the look of the whole app can be tuned
+  from one place without hunting through components. Each value comes from
+  docs/DESIGN.md, and the comments carry its reasoning.
+
+  Movement colors (Rococo blush, David red, and so on) are not here. They live
+  in src/data/movements.js beside each movement, because they are facts about
+  a movement and only appear after the student answers.
+*/
+
+:root {
+  /* ---------- Color (DESIGN.md section 3) ---------- */
+
+  /* Warm gallery wall: pure white glares and flattens paintings */
+  --wall: #EDE9E1;
+  /* A step lighter than the wall, like a printed wall label on board */
+  --paper: #FBFAF7;
+  /* Warm near-black: belongs to the same "room" as the wall */
+  --ink: #22201C;
+  --ink-hover: #36332D;
+  /* Second in the hierarchy, still about 5.7:1 on the wall */
+  --muted: #5E5A52;
+  /* The quietest text that still passes contrast (faded answer options) */
+  --muted-2: #66625A;
+  /* Lines should separate, not decorate */
+  --hairline: rgba(34, 32, 28, 0.14);
+  --hairline-strong: rgba(34, 32, 28, 0.32);
+  /* The readable cousin of gold, for accents that must be read */
+  --bronze: #7A5230;
+  /* Gold path: decorative only, never text (it fails contrast on the wall) */
+  --gold: #A9843F;
+  /* Gold lightened so it stays visible on ink buttons */
+  --gold-on-ink: #D4B06A;
+  /* Ultramarine, gold's precious counterpoint: marks keyboard focus everywhere */
+  --lapis: #2F4A6D;
+  /* Unvisited progress ticks: present but clearly "not yet" */
+  --tick-future: rgba(34, 32, 28, 0.18);
+  /* A faint ink wash behind hovered quiet controls */
+  --wash: rgba(34, 32, 28, 0.07);
+  /* Answer buttons: lighter glass than the panels, brighter on hover, and
+     faded once the answer is known so the right one stands forward */
+  --choice-fill: rgba(255, 255, 255, 0.55);
+  --choice-fill-hover: rgba(255, 255, 255, 0.8);
+  --choice-fill-wrong: rgba(255, 255, 255, 0.35);
+  --choice-fill-dim: rgba(255, 255, 255, 0.25);
+  --hairline-faint: rgba(34, 32, 28, 0.1);
+
+  /* ---------- Type (DESIGN.md section 4) ---------- */
+
+  /* Display: titles of works, verdicts, wordmark. The voice of exhibition catalogues */
+  --font-display: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
+  /* Reading: Chase's descriptions are long-form prose and deserve a book face */
+  --font-read: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  /* Labels: museum wayfinding is set in clean sans serifs */
+  --font-label: 'Work Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  --size-wordmark: 26px;
+  --size-title: 36px;
+  --size-verdict: 27px;
+  --size-body: 17px;
+  --size-choice: 18px;
+  --size-meta: 14px;
+  --size-label: 13px;
+  --size-tag: 12px;
+  --leading-body: 1.65;
+  --tracking-label: 1.2px;
+
+  /* ---------- Space, shape, elevation (DESIGN.md section 9) ---------- */
+
+  /* The spacing scale. Use these steps; no one-off values */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 34px;
+  --space-9: 40px;
+  --space-10: 48px;
+  --space-11: 56px;
+  --space-12: 72px;
+
+  --page-max: 1200px;
+  --page-gutter: 48px;
+
+  /* Sharp art, soft furniture: the art is an object, the interface is friendly */
+  --radius-art: 2px;
+  --radius-control: 10px;
+  --radius-panel: 16px;
+  --radius-pill: 999px;
+
+  /* Raised: glass panels float just in front of the wall */
+  --shadow-raised: 0 12px 36px -14px rgba(34, 32, 28, 0.28);
+  /* Hung: a framed work hangs off the wall, so its shadow is deeper and directional */
+  --shadow-hung: 0 22px 44px -12px rgba(34, 32, 28, 0.38), 0 3px 8px rgba(34, 32, 28, 0.16);
+  --shadow-hung-lifted: 0 40px 70px -20px rgba(34, 32, 28, 0.45), 0 6px 14px rgba(34, 32, 28, 0.16);
+  /* Ink buttons cast a soft shadow that deepens as they lift on hover */
+  --shadow-button: 0 14px 28px -14px rgba(34, 32, 28, 0.6);
+  --shadow-button-lifted: 0 20px 34px -14px rgba(34, 32, 28, 0.65);
+  --shadow-choice: 0 1px 2px rgba(34, 32, 28, 0.06);
+  --shadow-choice-lifted: 0 14px 28px -14px rgba(34, 32, 28, 0.4);
+  /* The zoomed painting floats furthest forward, so its shadow is the softest and widest */
+  --shadow-zoom: 0 40px 90px -30px rgba(34, 32, 28, 0.6);
+
+  /* ---------- Glass (DESIGN.md section 6) ---------- */
+
+  --glass-fill: rgba(251, 250, 247, 0.62);
+  --glass-blur: blur(18px) saturate(1.4);
+  --glass-edge: rgba(255, 255, 255, 0.7);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  /* Where backdrop blur is unsupported, solid paper keeps text readable */
+  --glass-fallback: rgba(251, 250, 247, 0.92);
+  /* The zoom scrim: the wall itself, frosted, so the room stays present */
+  --scrim: rgba(237, 233, 225, 0.55);
+
+  /* ---------- Light (DESIGN.md section 5) ---------- */
+
+  /* How strongly the blurred painting tints the room. Keep between 0.18 and
+     0.26; set to 0 to turn the ambient glow off entirely. */
+  --glow-opacity: 0.24;
+
+  /* ---------- Motion (DESIGN.md section 10) ---------- */
+
+  /* Fast start, gentle landing: like setting something down */
+  --ease-arrive: cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* Slow start and end: like a hand drawing a stroke */
+  --ease-draw: cubic-bezier(0.65, 0, 0.35, 1);
+  --t-quick: 250ms;
+  --t-settle: 600ms;
+  --t-draw: 900ms;
+  /* Lighting changes slowly in real rooms */
+  --t-ambient: 1200ms;
+}
+
+/* Phones: type about 15% smaller and a narrower page margin (DESIGN.md sections 4 and 9) */
+@media (max-width: 600px) {
+  :root {
+    --size-wordmark: 22px;
+    --size-title: 30px;
+    --size-verdict: 23px;
+    --size-body: 16px;
+    --size-choice: 17px;
+    --page-gutter: 16px;
+  }
+}

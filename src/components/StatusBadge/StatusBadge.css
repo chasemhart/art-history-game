@@ -1,0 +1,35 @@
+/* Status badge (DESIGN.md sections 2 and 11). Shape and word, never color alone. */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px var(--space-3);
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  font-family: var(--font-label);
+  font-size: var(--size-tag);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Correct: a solid ink pill with a check, the most settled shape */
+.status-badge.is-correct {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+/* Close: a bronze outline with a dash, partway to an answer */
+.status-badge.is-close {
+  border-color: var(--bronze);
+  color: var(--bronze);
+}
+
+/* Not quite: a dashed outline with a cross, quiet rather than alarming */
+.status-badge.is-not-quite {
+  border: 1px dashed var(--muted);
+  color: var(--muted);
+}
